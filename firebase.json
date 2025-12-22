@@ -1,0 +1,1 @@
+{"flutter":{"platforms":{"android":{"default":{"projectId":"psykisk-helse","appId":"1:417630531138:android:099c49e1da3ee6bc7547db","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"psykisk-helse","configurations":{"android":"1:417630531138:android:099c49e1da3ee6bc7547db","web":"1:417630531138:web:32a6202e1a36624c7547db"}}}}}}

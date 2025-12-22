@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "417630531138",
+    "project_id": "psykisk-helse",
+    "storage_bucket": "psykisk-helse.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417630531138:android:099c49e1da3ee6bc7547db",
+        "android_client_info": {
+          "package_name": "com.example.uas_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeoAkzeWEeVDccfRXw_Q9tQ3Hf_PTXUuE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
