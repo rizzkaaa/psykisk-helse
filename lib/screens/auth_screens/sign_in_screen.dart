@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
-import 'package:uas_project/screens/home_page_screen.dart';
 import 'package:uas_project/widgets/field_auth.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -100,12 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           if (!mounted) return;
 
                           if (success) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => HomePageScreen(),
-                              ),
-                            );
+                            Navigator.pushNamed(context, "/homePage");
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(loginController.error!)),

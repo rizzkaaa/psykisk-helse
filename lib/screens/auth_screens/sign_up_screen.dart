@@ -170,7 +170,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   TextButton(
-                    onPressed: widget.onPressed,
+                    onPressed: widget.onPressed     ,
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
                       minimumSize: Size.zero,

@@ -1,10 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:uas_project/screens/auth_screens/auth_screen.dart';
-import 'package:uas_project/widgets/circle.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class WelcomeScreen extends StatelessWidget {
+class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
+
+  @override
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
+}
+
+class _WelcomeScreenState extends State<WelcomeScreen> {
+  String? userID;
+  String? userLevel;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLogin();
+  }
+
+  Future<void> _checkLogin() async {
+    final prefs = await SharedPreferences.getInstance();
+    final uid = prefs.getString('userId');
+    final level = prefs.getString('userLevel');
+
+    if (uid != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        Navigator.pushNamed(context, "/homePage");
+      });
+    }
+
+    setState(() {
+      userID = uid;
+      userLevel = level;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +102,7 @@ class WelcomeScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AuthScreen(isSignIn: false),
-                            ),
-                          );
+                          Navigator.pushNamed(context, "/signUp");
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 0,
@@ -102,12 +127,7 @@ class WelcomeScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AuthScreen(isSignIn: true),
-                            ),
-                          );
+                          Navigator.pushNamed(context, "/signIn");
                         },
                         style: ElevatedButton.styleFrom(
                           elevation: 0,

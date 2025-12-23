@@ -49,4 +49,14 @@ class AuthController extends ChangeNotifier {
     uploading = false;
     notifyListeners();
   }
+
+  Future<void> logout() async {
+    isLoading = true;
+    notifyListeners();
+
+    await _authService.logout();
+
+    isLoading = false;
+    notifyListeners();
+  }
 }

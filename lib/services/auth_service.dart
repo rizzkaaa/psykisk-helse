@@ -71,6 +71,12 @@ class AuthService {
         return "User not found";
       }
 
+      final role = userDoc["role"];
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userId', uid);
+      await prefs.setString('userLevel', role);
+
       final isActive = userDoc['isActive'] ?? true;
 
       if (!isActive) {
