@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:uas_project/screens/auth_screens/sign_in_screen.dart';
+import 'package:uas_project/screens/auth/sign_in_screen.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
-import 'package:uas_project/screens/auth_screens/sign_up_screen.dart';
+import 'package:uas_project/screens/auth/sign_up_screen.dart';
 
 class AuthScreen extends StatefulWidget {
   final bool isSignIn;

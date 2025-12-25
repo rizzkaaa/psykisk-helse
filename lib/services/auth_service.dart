@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/users_model.dart';
 
 class AuthService {
@@ -21,9 +21,7 @@ class AuthService {
         .limit(1)
         .get();
 
-    if (userCheck.docs.isNotEmpty) {
-      return "Username already used";
-    }
+    if (userCheck.docs.isNotEmpty) return "Username already used";
 
     try {
       final cred = await _auth.createUserWithEmailAndPassword(
@@ -35,23 +33,18 @@ class AuthService {
         "fullname": "",
         "username": username,
         "email": email,
+        "bio": "",
         "photo": "",
+        "headerBanner": "",
         "role": "user",
         "isActive": true,
       });
-      print("Sign Up Success!");
 
       // notifService.createPersonalNotif(cred.user!.uid, 'welcome');
 
       return null;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'email-already-in-use') {
-        return "Email already used";
-      } else if (e.code == 'invalid-email') {
-        return "Invalid email";
-      } else {
-        return e.message;
-      }
+      return e.message;
     }
   }
 
@@ -63,7 +56,6 @@ class AuthService {
       );
 
       final uid = cred.user!.uid;
-
       final userDoc = await _userRef.doc(uid).get();
 
       if (!userDoc.exists) {
@@ -71,28 +63,18 @@ class AuthService {
         return "User not found";
       }
 
-      final role = userDoc["role"];
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('userId', uid);
-      await prefs.setString('userLevel', role);
-
-      final isActive = userDoc['isActive'] ?? true;
-
-      if (!isActive) {
+      if (userDoc['isActive'] == false) {
         await logout();
         return "Your account is unactive";
       }
 
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userId', uid);
+      await prefs.setString('userLevel', userDoc["role"]);
+
       return null;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        return "User not found";
-      } else if (e.code == 'wrong-password') {
-        return "Wrong password";
-      } else {
-        return "Sign In failed: ${e.message}";
-      }
+      return e.message;
     }
   }
 
@@ -105,11 +87,9 @@ class AuthService {
     final uid = _auth.currentUser!.uid;
 
     final doc = await _userRef.doc(uid).get();
-    final role = doc["role"];
-
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userId', uid);
-    await prefs.setString('userLevel', role);
+    await prefs.setString('userLevel', doc["role"]);
 
     return UserModel.fromFirestore(doc);
   }
@@ -155,77 +135,74 @@ class AuthService {
 
   Future<void> updateProfile({
     required String username,
+    required String fullname,
     required String email,
-    String? oldPassword,
-    String? newPassword,
+    required String bio,
   }) async {
     final user = _auth.currentUser;
-
     if (user == null) throw Exception("User belum login");
+
+    await _userRef.checkUniqueField(
+      field: "username",
+      value: username,
+      uid: user.uid,
+    );
+
+    await _userRef.checkUniqueField(
+      field: "email",
+      value: email,
+      uid: user.uid,
+    );
 
     if (email != user.email) {
       await user.verifyBeforeUpdateEmail(email);
     }
-
-    if (newPassword != null && newPassword.isNotEmpty) {
-      final cred = EmailAuthProvider.credential(
-        email: user.email!,
-        password: oldPassword ?? "",
-      );
-
-      await user.reauthenticateWithCredential(cred);
-      await user.updatePassword(newPassword);
-    }
-
-    await _userRef.doc(user.uid).update({"username": username, "email": email});
+    await _userRef.doc(user.uid).update({
+      "fullname": fullname,
+      "username": username,
+      "bio": bio,
+      "email": email,
+    });
+    print("berhasil");
   }
 
-  Future<String?> uploadPhoto(File image) async {
+  Future<void> updatePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    final user = _auth.currentUser!;
+    final cred = EmailAuthProvider.credential(
+      email: user.email!,
+      password: oldPassword,
+    );
+
+    await user.reauthenticateWithCredential(cred);
+    await user.updatePassword(newPassword);
+  }
+
+  Future<String> uploadBase64(File image) async {
+    final bytes = await image.readAsBytes();
+    return base64Encode(bytes);
+  }
+
+  Future<void> uploadPhoto({String? photo, String? headerBanner}) async {
     try {
       final uid = _auth.currentUser!.uid;
+      final data = <String, dynamic>{};
 
-      final bytes = await image.readAsBytes();
+      if (photo != null) data['photo'] = photo;
+      if (headerBanner != null) data['headerBanner'] = headerBanner;
 
-      final base64Image = base64Encode(bytes);
-
-      await _userRef.doc(uid).update({"photo": base64Image});
-      print("✅ Photo saved to Firestore!");
-      return base64Image;
+      await _userRef.doc(uid).update(data);
     } catch (e) {
       print("❌ UPLOAD ERROR: $e");
-      return null;
-    }
-  }
-
-  ImageProvider getImageProvider(String? photo) {
-    if (photo == null || photo.toString().isEmpty) {
-      print("❌ Photo is null or empty");
-      return AssetImage('assets/images/default-profile.png');
-    }
-
-    final photoStr = photo.toString();
-
-    if (photoStr.startsWith('http')) {
-      print("🌐 Photo URL: $photoStr");
-      return NetworkImage(photoStr);
-    }
-
-    try {
-      print("🔄 Decoding base64, length: ${photoStr.length}");
-      final bytes = base64Decode(photoStr);
-      print("✅ Decoded ${bytes.length} bytes");
-      return MemoryImage(bytes);
-    } catch (e) {
-      print("❌ Error decoding base64: $e");
-      return AssetImage('assets/images/default-profile.png');
     }
   }
 
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('userId');
-    await prefs.remove('userLevel');
-    _auth.signOut();
+    await prefs.clear();
+    await _auth.signOut();
   }
 
   Future<void> deleteAccount(String idUser) async {

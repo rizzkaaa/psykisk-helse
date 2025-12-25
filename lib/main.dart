@@ -2,14 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
-import 'package:uas_project/screens/auth_screens/auth_screen.dart';
-import 'package:uas_project/screens/chatbot_screens/chat_bot_ui.dart';
+import 'package:uas_project/firebase_options.dart';
+import 'package:uas_project/onboarding_page.dart';
+import 'package:uas_project/screens/auth/auth_screen.dart';
+import 'package:uas_project/screens/chatbot/chat_bot_ui.dart';
+import 'package:uas_project/screens/community/community_screen.dart';
 import 'package:uas_project/screens/home_page_screen.dart';
+import 'package:uas_project/screens/notification_screen.dart';
+import 'package:uas_project/screens/profile_screen/profile_screen.dart';
 import 'package:uas_project/screens/welcome_screen.dart';
+import 'package:uas_project/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => AuthController())],
@@ -26,12 +34,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Psykisk Helse',
+      initialRoute: "/",
       routes: {
+        // '/': (context) => const SplashScreen(),
         '/': (context) => const WelcomeScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
+        '/welcomeScreen': (context) => const WelcomeScreen(),
         '/signIn': (context) => const AuthScreen(isSignIn: true),
         '/signUp': (context) => const AuthScreen(isSignIn: false),
         '/homePage': (context) => const HomePageScreen(),
+        '/profilePage': (context) => const ProfileScreen(),
+        '/notification': (context) => const NotificationScreen(),
         '/chatbot': (context) => const ChatPage(),
+        '/community': (context) => CommunityPage(),
       },
     );
   }

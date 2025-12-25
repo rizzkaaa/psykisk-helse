@@ -4,36 +4,40 @@ import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/widgets/field_auth.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   final VoidCallback onPressed;
-  const SignInScreen({super.key, required this.onPressed});
+  const SignUpScreen({super.key, required this.onPressed});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
+    _usernameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final loginController = context.watch<AuthController>();
+    final registerController = context.watch<AuthController>();
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Divider(thickness: 3, color: Colors.grey, indent: 130, endIndent: 130),
-        const SizedBox(height: 25),
         Text(
-          "Welcome Back",
+          "Get Started",
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.bold,
             fontSize: 30,
@@ -47,11 +51,23 @@ class _SignInScreenState extends State<SignInScreen> {
           color: Color(0xFFa7a96f),
           radius: BorderRadius.circular(20),
         ),
-        const SizedBox(height: 50),
+        const SizedBox(height: 40),
         Form(
           key: _formKey,
           child: Column(
             children: [
+              FieldAuth(
+                controller: _usernameController,
+                label: "Username",
+                icon: Icons.person,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Username can't be empty";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
               FieldAuth(
                 controller: _emailController,
                 label: "Email",
@@ -83,26 +99,44 @@ class _SignInScreenState extends State<SignInScreen> {
                 },
               ),
               const SizedBox(height: 30),
+              FieldAuth(
+                controller: _confirmPasswordController,
+                label: "Confirm Password",
+                icon: Icons.key,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Please enter confirm password";
+                  }
+                  if (value != _passwordController.text.trim()) {
+                    return "Enter the correct password";
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 30),
 
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: loginController.isLoading
+                  onPressed: registerController.isLoading
                       ? null
                       : () async {
                           if (!_formKey.currentState!.validate()) return;
 
-                          final success = await loginController.login(
+                          final success = await registerController.register(
+                            _usernameController.text.trim(),
                             _emailController.text.trim(),
                             _passwordController.text.trim(),
                           );
                           if (!mounted) return;
 
                           if (success) {
-                            Navigator.pushNamed(context, "/homePage");
+                            widget.onPressed();
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(loginController.error!)),
+                              SnackBar(
+                                content: Text(registerController.error!),
+                              ),
                             );
                           }
                         },
@@ -113,51 +147,26 @@ class _SignInScreenState extends State<SignInScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
-                  child: Text(
-                    "Sign In",
-                    style: GoogleFonts.bricolageGrotesque(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: registerController.isLoading
+                      ? CircularProgressIndicator(color: Colors.white)
+                      : Text(
+                          "Sign In",
+                          style: GoogleFonts.bricolageGrotesque(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
               ),
               const SizedBox(height: 35),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Forget password? ",
-                    style: GoogleFonts.bricolageGrotesque(
-                      color: Color(0xFF6b7328),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: Size.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Text(
-                      "Reset password",
-                      style: GoogleFonts.bricolageGrotesque(
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.bold,
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
 
                 children: [
                   Text(
-                    "Don't have account yet? ",
+                    "Already have account? ",
                     style: GoogleFonts.bricolageGrotesque(
                       color: Color(0xFF6b7328),
                     ),
@@ -170,7 +179,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
                     child: Text(
-                      "Sign Up Now",
+                      "Sign In Now",
                       style: GoogleFonts.bricolageGrotesque(
                         color: Colors.blueGrey,
                         fontWeight: FontWeight.bold,
@@ -183,6 +192,9 @@ class _SignInScreenState extends State<SignInScreen> {
             ],
           ),
         ),
+        const SizedBox(height: 25),
+
+        Divider(thickness: 3, color: Colors.grey, indent: 130, endIndent: 130),
       ],
     );
   }

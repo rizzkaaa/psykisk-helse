@@ -127,7 +127,7 @@ class _ChatPageState extends State<ChatPage> {
                 IconButton(
                   icon: const Icon(Icons.reply, color: Color(0xFF73a664)),
                   onPressed: () => Navigator.pop(context),
-                  tooltip: "Kembali",
+                  tooltip: "Back",
                 ),
                 IconButton(
                   icon: const Icon(Icons.refresh, color: Color(0xFF73a664)),

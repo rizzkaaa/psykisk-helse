@@ -5,7 +5,9 @@ class UserModel extends BaseModel {
   final String _fullname;
   final String _username;
   final String _email;
+  final String _bio;
   final String _photo;
+  final String _headerBanner;
   final String _role;
   final bool _isActive;
 
@@ -14,27 +16,29 @@ class UserModel extends BaseModel {
     required String fullname,
     required String username,
     required String email,
+    required String bio,
     required String photo,
+    required String headerBanner,
     required String role,
     required bool isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  })  : _fullname = fullname,
-        _username = username,
-        _email = email,
-        _photo = photo,
-        _role = role,
-        _isActive = isActive,
-        super(
-          docId: docId,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-        );
+  }) : _fullname = fullname,
+       _username = username,
+       _email = email,
+       _bio = bio,
+       _photo = photo,
+       _headerBanner = headerBanner,
+       _role = role,
+       _isActive = isActive,
+       super(docId: docId, createdAt: createdAt, updatedAt: updatedAt);
 
   String get fullname => _fullname;
   String get username => _username;
   String get email => _email;
+  String get bio => _bio;
   String get photo => _photo;
+  String get headerBanner => _headerBanner;
   String get role => _role;
   bool get isActive => _isActive;
 
@@ -43,7 +47,9 @@ class UserModel extends BaseModel {
       fullname: json['fullname'] ?? '-',
       username: json['username'] ?? '-',
       email: json['email'] ?? '-',
+      bio: json['bio'] ?? '-',
       photo: json['photo'] ?? '-',
+      headerBanner: json['headerBanner'] ?? '-',
       role: json['role'] ?? 'user',
       isActive: json['isActive'] ?? false,
     );
@@ -56,7 +62,9 @@ class UserModel extends BaseModel {
       fullname: data['fullname'] ?? '-',
       username: data['username'] ?? '-',
       email: data['email'] ?? '-',
+      bio: data['bio'] ?? '-',
       photo: data['photo'] ?? '-',
+      headerBanner: data['headerBanner'] ?? '-',
       role: data['role'] ?? 'user',
       isActive: data['isActive'] ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
@@ -69,7 +77,9 @@ class UserModel extends BaseModel {
       'fullname': _fullname,
       'username': _username,
       'email': _email,
+      'bio': _bio,
       'photo': _photo,
+      'headerBanner': _headerBanner,
       'role': _role,
       'isActive': _isActive,
     };
@@ -80,7 +90,9 @@ class UserModel extends BaseModel {
       'fullname': _fullname,
       'username': _username,
       'email': _email,
+      'bio': _bio,
       'photo': _photo,
+      'headerBanner': _headerBanner,
       'role': _role,
       'isActive': _isActive,
       'updatedAt': FieldValue.serverTimestamp(),
