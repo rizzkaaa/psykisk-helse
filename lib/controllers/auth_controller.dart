@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 import 'package:uas_project/models/users_model.dart';
 import 'package:flutter/material.dart';
 import 'package:uas_project/services/auth_service.dart';
@@ -9,7 +8,24 @@ class AuthController extends ChangeNotifier {
 
   bool isLoading = false;
   String? error;
-  UserModel? user;
+  UserModel? userData;
+
+  Future<void> loadUser({bool force = false}) async {
+    if ((userData != null && !force) || isLoading) return;
+    if (isLoading) return;
+
+    isLoading = true;
+    // notifyListeners();
+
+    try {
+      userData = await _authService.getProfile();
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 
   Future<bool> login(String email, String password) async {
     isLoading = true;
@@ -42,24 +58,36 @@ class AuthController extends ChangeNotifier {
 
   Future<UserModel> getProfile() async {
     try {
+      isLoading = true;
+      notifyListeners();
+
       final user = await _authService.getProfile();
+
+      isLoading = false;
+      notifyListeners();
       return user;
     } catch (e) {
+      isLoading = false;
+      notifyListeners();
       throw Exception('Gagal mengambil profile');
     }
   }
 
-  ImageProvider getImageProvider(String? photo) {
-    if (photo == null || photo.toString().isEmpty) {
-      return const AssetImage('assets/images/default-profile.png');
-    }
-
-    final photoStr = photo.toString();
+  Future<UserModel?> fetchUserByID(String idUser) async {
+    isLoading = true;
+    notifyListeners();
 
     try {
-      return MemoryImage(base64Decode(photoStr));
+      final user = await _authService.getUserByID(idUser);
+      isLoading = false;
+      notifyListeners();
+      return user;
     } catch (e) {
-      return AssetImage('assets/images/default-profile.png');
+      print(e);
+      return null;
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
   }
 

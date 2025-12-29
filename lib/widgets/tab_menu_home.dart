@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:uas_project/widgets/unstyle_button.dart';
 
 class TabMenuHome extends StatelessWidget {
   final VoidCallback onPressed;
@@ -18,17 +19,9 @@ class TabMenuHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return UnstyleButton(
       onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.zero,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        surfaceTintColor: Colors.transparent,
-        shadowColor: Colors.transparent,
-        overlayColor: Colors.transparent,
-      ),
-      child: Column(
+      content: Column(
         children: [
           Container(
             padding: const EdgeInsets.all(12),

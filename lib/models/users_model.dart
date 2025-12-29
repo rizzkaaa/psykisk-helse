@@ -12,7 +12,7 @@ class UserModel extends BaseModel {
   final bool _isActive;
 
   UserModel({
-    String? docId,
+    super.docId,
     required String fullname,
     required String username,
     required String email,
@@ -21,8 +21,8 @@ class UserModel extends BaseModel {
     required String headerBanner,
     required String role,
     required bool isActive,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    super.createdAt,
+    super.updatedAt,
   }) : _fullname = fullname,
        _username = username,
        _email = email,
@@ -30,8 +30,7 @@ class UserModel extends BaseModel {
        _photo = photo,
        _headerBanner = headerBanner,
        _role = role,
-       _isActive = isActive,
-       super(docId: docId, createdAt: createdAt, updatedAt: updatedAt);
+       _isActive = isActive;
 
   String get fullname => _fullname;
   String get username => _username;

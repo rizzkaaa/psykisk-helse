@@ -15,5 +15,5 @@ abstract class BasePost {
   String get content => _content;
   DateTime get timestamp => _timestamp;
 
-  String get displayUsername;
+  String get displayRole;
 }

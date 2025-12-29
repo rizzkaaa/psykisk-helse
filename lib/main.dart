@@ -4,14 +4,15 @@ import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/firebase_options.dart';
 import 'package:uas_project/onboarding_page.dart';
+import 'package:uas_project/screens/audio_relaxation/playlist_screen.dart';
 import 'package:uas_project/screens/auth/auth_screen.dart';
 import 'package:uas_project/screens/chatbot/chat_bot_ui.dart';
 import 'package:uas_project/screens/community/community_screen.dart';
-import 'package:uas_project/screens/home_page_screen.dart';
+import 'package:uas_project/screens/community/create_post_screen.dart';
+import 'package:uas_project/screens/home_page.dart';
 import 'package:uas_project/screens/notification_screen.dart';
 import 'package:uas_project/screens/profile_screen/profile_screen.dart';
 import 'package:uas_project/screens/welcome_screen.dart';
-import 'package:uas_project/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,11 +43,13 @@ class MyApp extends StatelessWidget {
         '/welcomeScreen': (context) => const WelcomeScreen(),
         '/signIn': (context) => const AuthScreen(isSignIn: true),
         '/signUp': (context) => const AuthScreen(isSignIn: false),
-        '/homePage': (context) => const HomePageScreen(),
+        '/homePage': (context) => const HomePage(),
         '/profilePage': (context) => const ProfileScreen(),
         '/notification': (context) => const NotificationScreen(),
         '/chatbot': (context) => const ChatPage(),
-        '/community': (context) => CommunityPage(),
+        '/community': (context) => CommunityScreen(),
+        '/createCommunity': (context) => CreatePostScreen(),
+        '/audioRelaxation': (context) => AudioPlaylistScreen(),
       },
     );
   }

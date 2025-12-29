@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:convert';
+import 'package:flutter/material.dart';
 
 extension UniqueFieldChecker on CollectionReference {
   Future<void> checkUniqueField({
@@ -21,5 +23,21 @@ extension TimeAgoExtension on DateTime {
     if (diff.inHours < 1) return "${diff.inMinutes} menit lalu";
     if (diff.inHours < 24) return "${diff.inHours} jam lalu";
     return "${diff.inDays} hari lalu";
+  }
+}
+
+extension Base64ImageExtension on String? {
+  ImageProvider toImageProvider({
+    ImageProvider fallback = const AssetImage('assets/images/default-ava.png'),
+  }) {
+    if (this == null || this!.isEmpty) {
+      return fallback;
+    }
+
+    try {
+      return MemoryImage(base64Decode(this!));
+    } catch (_) {
+      return fallback;
+    }
   }
 }

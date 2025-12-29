@@ -102,6 +102,15 @@ class AuthService {
     return UserModel.fromFirestore(doc);
   }
 
+  Future<UserModel> getUserByUsername(String username) async {
+    final query = await _userRef
+        .where("username", isEqualTo: username)
+        .limit(1)
+        .get();
+
+    return UserModel.fromFirestore(query.docs.first);
+  }
+
   Future<List<UserModel>> searchUserByEmail(String query) async {
     final snapshot = await _userRef.get();
 
