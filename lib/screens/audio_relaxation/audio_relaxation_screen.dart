@@ -82,7 +82,7 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).primaryColor;
+    final primary = Color(0xFF5A7863);
     final audio = widget.playlist[_currentIndex];
 
     return Scaffold(
@@ -100,39 +100,17 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
           ),
         ),
         child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                // Custom App Bar
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(12),
-                            boxShadow: [
-                              BoxShadow(
-                                color: primary.withOpacity(0.1),
-                                blurRadius: 10,
-                                offset: const Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: Icon(
-                            Icons.arrow_back_ios_new,
-                            color: primary,
-                            size: 18,
-                          ),
-                        ),
-                      ),
-                      Container(
+          child: Column(
+            children: [
+              // Custom App Bar
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
@@ -147,80 +125,96 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                           ],
                         ),
                         child: Icon(
-                          Icons.more_vert,
+                          Icons.arrow_back_ios_new,
                           color: primary,
-                          size: 22,
+                          size: 18,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 40),
-
-                // Artwork with Decorative Pattern
-                Container(
-                  width: 260,
-                  height: 260,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        primary.withOpacity(0.8),
-                        primary,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(200),
-                    boxShadow: [
-                      BoxShadow(
-                        color: primary.withOpacity(0.4),
-                        blurRadius: 40,
-                        offset: const Offset(0, 20),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Decorative flower pattern
-                      ...List.generate(8, (index) {
-                        final angle = (index * pi / 4);
-                        return Transform.rotate(
-                          angle: angle,
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(50),
-                            ),
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: primary.withOpacity(0.1),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
                           ),
-                        );
-                      }),
-                      
-                      // Center Icon
-                      Container(
-                        width: 120,
-                        height: 120,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.25),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.self_improvement,
-                          size: 60,
-                          color: Colors.white,
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
+                      child: Icon(Icons.more_vert, color: primary, size: 22),
+                    ),
+                  ],
                 ),
+              ),
 
-                const SizedBox(height: 40),
+              const SizedBox(height: 40),
 
-                // White Card Section
-                Container(
+              // Artwork with Decorative Pattern
+              Container(
+                width: 260,
+                height: 260,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [primary.withOpacity(0.8), primary],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(200),
+                  boxShadow: [
+                    BoxShadow(
+                      color: primary.withOpacity(0.4),
+                      blurRadius: 40,
+                      offset: const Offset(0, 20),
+                    ),
+                  ],
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Decorative flower pattern
+                    ...List.generate(8, (index) {
+                      final angle = (index * pi / 4);
+                      return Transform.rotate(
+                        angle: angle,
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                        ),
+                      );
+                    }),
+
+                    // Center Icon
+                    Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.25),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.self_improvement,
+                        size: 60,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 80),
+              
+
+              // White Card Section
+              Expanded(
+                child: Container(
                   width: double.infinity,
                   constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height * 0.45,
@@ -254,7 +248,9 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                                       overlayRadius: 16,
                                     ),
                                     activeTrackColor: primary,
-                                    inactiveTrackColor: primary.withOpacity(0.15),
+                                    inactiveTrackColor: primary.withOpacity(
+                                      0.15,
+                                    ),
                                     thumbColor: primary,
                                     overlayColor: primary.withOpacity(0.2),
                                   ),
@@ -271,9 +267,12 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       _time(position),
                                       _time(duration),
@@ -323,9 +322,9 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                                   setState(() => _shuffle = !_shuffle),
                               primary: primary,
                             ),
-                            
+
                             const SizedBox(width: 20),
-                            
+
                             _controlButton(
                               icon: Icons.skip_previous_rounded,
                               active: true,
@@ -333,9 +332,9 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                               primary: primary,
                               size: 32,
                             ),
-                            
+
                             const SizedBox(width: 20),
-                            
+
                             // Play/Pause Button
                             ScaleTransition(
                               scale: _playAnim,
@@ -344,10 +343,7 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                                 height: 72,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [
-                                      primary.withOpacity(0.9),
-                                      primary,
-                                    ],
+                                    colors: [primary.withOpacity(0.9), primary],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
@@ -372,9 +368,9 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                                 ),
                               ),
                             ),
-                            
+
                             const SizedBox(width: 20),
-                            
+
                             _controlButton(
                               icon: Icons.skip_next_rounded,
                               active: true,
@@ -382,9 +378,9 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                               primary: primary,
                               size: 32,
                             ),
-                            
+
                             const SizedBox(width: 20),
-                            
+
                             _controlButton(
                               icon: _loopMode == LoopMode.one
                                   ? Icons.repeat_one_rounded
@@ -402,34 +398,12 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
                             ),
                           ],
                         ),
-
-                        const SizedBox(height: 32),
-
-                        // Bottom Navigation
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          decoration: BoxDecoration(
-                            color: primary.withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(Icons.home_rounded, color: primary, size: 26),
-                              Icon(Icons.favorite_border, color: primary.withOpacity(0.4), size: 26),
-                              Icon(Icons.notifications_outlined, color: primary.withOpacity(0.4), size: 26),
-                              Icon(Icons.person_outline, color: primary.withOpacity(0.4), size: 26),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -468,7 +442,7 @@ class _AudioRelaxationScreenState extends State<AudioRelaxationScreen>
       '$m:$s',
       style: TextStyle(
         fontSize: 13,
-        color: Theme.of(context).primaryColor.withOpacity(0.6),
+        color: Color(0xFF5A7863).withOpacity(0.6),
         fontWeight: FontWeight.w500,
       ),
     );

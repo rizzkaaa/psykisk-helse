@@ -45,6 +45,10 @@ class _CardPostState extends State<CardPost> {
       userID = uid;
       userLevel = level;
     });
+
+     if (uid != null) {
+      _checkIsLiked();
+    }
   }
 
   @override
@@ -95,7 +99,6 @@ class _CardPostState extends State<CardPost> {
           return const Center(child: Text("Tidak ada data"));
         } else {
           user = snapshot.data!;
-          _checkIsLiked();
 
           return Padding(
             padding: const EdgeInsets.only(top: 20, left: 30, right: 30),

@@ -9,7 +9,11 @@ import 'package:uas_project/screens/auth/auth_screen.dart';
 import 'package:uas_project/screens/chatbot/chat_bot_ui.dart';
 import 'package:uas_project/screens/community/community_screen.dart';
 import 'package:uas_project/screens/community/create_post_screen.dart';
-import 'package:uas_project/screens/home_page.dart';
+import 'package:uas_project/screens/home_screen.dart';
+import 'package:uas_project/screens/journal/editor_page.dart';
+import 'package:uas_project/screens/journal/list_journal_screen.dart';
+import 'package:uas_project/screens/mood_tracker/ask_mood.dart';
+import 'package:uas_project/screens/mood_tracker/mood_tracker_screen.dart';
 import 'package:uas_project/screens/notification_screen.dart';
 import 'package:uas_project/screens/profile_screen/profile_screen.dart';
 import 'package:uas_project/screens/welcome_screen.dart';
@@ -43,13 +47,18 @@ class MyApp extends StatelessWidget {
         '/welcomeScreen': (context) => const WelcomeScreen(),
         '/signIn': (context) => const AuthScreen(isSignIn: true),
         '/signUp': (context) => const AuthScreen(isSignIn: false),
-        '/homePage': (context) => const HomePage(),
+        '/homeScreen': (context) => const HomeScreen(),
         '/profilePage': (context) => const ProfileScreen(),
         '/notification': (context) => const NotificationScreen(),
         '/chatbot': (context) => const ChatPage(),
+        '/moodTracker': (context) => const MoodTrackerScreen(),
+        '/askMood': (context) => const AskMood(),
         '/community': (context) => CommunityScreen(),
         '/createCommunity': (context) => CreatePostScreen(),
         '/audioRelaxation': (context) => AudioPlaylistScreen(),
+        '/listJournal': (context) => ListJournalScreen(),
+        '/journal': (context) => NoteEditorPage(),
+        '/createJournal': (context) => NoteEditorPage(),
       },
     );
   }

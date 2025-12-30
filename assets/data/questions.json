@@ -1,0 +1,57 @@
+[
+  {
+    "id": "energy",
+    "pertanyaan": "How is your energy level today?",
+    "opsi": [
+      { "teks": "Very tired", "skor": 0 },
+      { "teks": "Low energy", "skor": 1 },
+      { "teks": "Neutral", "skor": 2 },
+      { "teks": "Quite energetic", "skor": 3 },
+      { "teks": "Very energetic", "skor": 4 }
+    ]
+  },
+  {
+    "id": "stress",
+    "pertanyaan": "How stressed are you today?",
+    "opsi": [
+      { "teks": "Very stressed", "skor": 0 },
+      { "teks": "Stressed", "skor": 1 },
+      { "teks": "Moderately stressed", "skor": 2 },
+      { "teks": "Slightly stressed", "skor": 3 },
+      { "teks": "Not stressed", "skor": 4 }
+    ]
+  },
+  {
+    "id": "sleep",
+    "pertanyaan": "How was your sleep quality last night?",
+    "opsi": [
+      { "teks": "Very poor", "skor": 0 },
+      { "teks": "Poor", "skor": 1 },
+      { "teks": "Fair", "skor": 2 },
+      { "teks": "Good", "skor": 3 },
+      { "teks": "Very good", "skor": 4 }
+    ]
+  },
+  {
+    "id": "social",
+    "pertanyaan": "How were your social interactions today?",
+    "opsi": [
+      { "teks": "Negative", "skor": 0 },
+      { "teks": "Somewhat negative", "skor": 1 },
+      { "teks": "Neutral", "skor": 2 },
+      { "teks": "Positive", "skor": 3 },
+      { "teks": "Very positive", "skor": 4 }
+    ]
+  },
+  {
+    "id": "productivity",
+    "pertanyaan": "How productive were you today?",
+    "opsi": [
+      { "teks": "Not productive", "skor": 0 },
+      { "teks": "Low productivity", "skor": 1 },
+      { "teks": "Moderately productive", "skor": 2 },
+      { "teks": "Productive", "skor": 3 },
+      { "teks": "Very productive", "skor": 4 }
+    ]
+  }
+]

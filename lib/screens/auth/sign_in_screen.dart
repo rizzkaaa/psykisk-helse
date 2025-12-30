@@ -99,7 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           if (!mounted) return;
 
                           if (success) {
-                            Navigator.pushNamed(context, "/homePage");
+                            Navigator.pushNamed(context, "/homeScreen");
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text(loginController.error!)),

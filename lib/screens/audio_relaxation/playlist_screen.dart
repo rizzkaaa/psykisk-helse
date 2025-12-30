@@ -268,11 +268,11 @@ final deepRelaxAudios = [
 ];
 
 final sleepAudios = [
-  {'title': 'Night Crickets', 'asset': 'assets/audio/night.mp3'},
+  {'title': 'Night Crickets', 'asset': 'assets/audio/midnight-forest.mp3'},
   {'title': 'Ocean Waves', 'asset': 'assets/audio/ocean-meditation.mp3'},
 ];
 
 final focusAudios = [
-  {'title': 'Brown Noise', 'asset': 'assets/audio/brown.mp3'},
-  {'title': 'Deep Focus', 'asset': 'assets/audio/focus.mp3'},
+  {'title': 'Brown Noise', 'asset': 'assets/audio/healing-dreams.mp3'},
+  {'title': 'Deep Focus', 'asset': 'assets/audio/healing-light.mp3'},
 ];

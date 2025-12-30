@@ -52,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Color(0xFFEBF4DD),
       body: user == null
-          ? const CircularProgressIndicator(color: Color(0xFF5A7863))
+          ? const Center(child: CircularProgressIndicator(color: Color(0xFF5A7863)))
           : Column(
               children: [
                 Stack(

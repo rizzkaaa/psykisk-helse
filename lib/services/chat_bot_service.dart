@@ -25,6 +25,7 @@ class ChatBotService {
         final data = jsonDecode(response.body);
         return data["choices"][0]["message"]["content"];
       } else {
+        print("ERROR API: ${response.body}");
         return "Error API: ${response.statusCode}";
       }
     } catch (e) {

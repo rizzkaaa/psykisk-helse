@@ -26,7 +26,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     if (uid != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, "/homePage");
+        Navigator.pushNamed(context, "/homeScreen");
       });
     }
 
