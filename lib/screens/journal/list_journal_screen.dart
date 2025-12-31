@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
-import 'package:uas_project/models/post_model.dart';
-import 'package:uas_project/screens/community/card_post.dart';
-import 'package:uas_project/services/community_service.dart';
 import 'package:uas_project/widgets/search_field.dart';
 
 class ListJournalScreen extends StatefulWidget {

@@ -124,6 +124,16 @@ class _NoteEditorPageState extends State<NoteEditorPage> {
                   onPressed: () => Navigator.pop(context),
                   tooltip: "Back",
                 ),
+                IconButton(
+                  icon: const Icon(Icons.undo, color: Color(0xFF73a664)),
+                  onPressed: _performUndo,
+                  tooltip: "Undo",
+                ),
+                IconButton(
+                  icon: const Icon(Icons.send, color: Color(0xFF73a664)),
+                  onPressed: () {},
+                  tooltip: "Send",
+                ),
               ],
             ),
           ),
