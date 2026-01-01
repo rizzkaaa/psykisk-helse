@@ -44,7 +44,7 @@ class _CardQuestionState extends State<CardQuestion> {
               ),
             ),
             Slider(
-              value: _manualValue,
+              value: _manualValue, 
               min: 0,
               max: 4,
               divisions: 4,

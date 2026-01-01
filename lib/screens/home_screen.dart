@@ -8,6 +8,7 @@ import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
 import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/post_model.dart';
 import 'package:uas_project/screens/community/card_post.dart';
+import 'package:uas_project/screens/psychology_test/psychology_test_list.dart';
 import 'package:uas_project/services/community_service.dart';
 import 'package:uas_project/widgets/tab_menu_home.dart';
 
@@ -227,7 +228,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       children: [
                         TabMenuHome(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PsychologyTestList()));
+                          },
                           icon: Icons.psychology,
                           title: "Psychology",
                           titleOpsional: "Test",

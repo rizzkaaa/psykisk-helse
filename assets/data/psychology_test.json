@@ -1,0 +1,916 @@
+{
+  "tests": [
+    {
+      "id": "gad-7",
+      "title": "Anxiety Test (GAD-7)",
+      "subtitle": "Measures general anxiety levels over the past 2 weeks.",
+      "emoji": "😰",
+      "questions": [
+        {
+          "text": "Feeling nervous, anxious, or on edge?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Not being able to stop or control worrying?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Worrying too much about different things?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Trouble relaxing?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Being so restless that it's hard to sit still?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Becoming easily annoyed or irritable?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Feeling afraid as if something awful might happen?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Difficulty concentrating due to intrusive thoughts?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Experiencing muscle tension or headaches?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Heart racing without physical cause?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "depression-test",
+      "title": "Depression Test (PHQ-9)",
+      "subtitle": "Evaluates mood and interest in activities.",
+      "emoji": "😔",
+      "questions": [
+        {
+          "text": "Feeling down, depressed, or hopeless?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Little interest or pleasure in doing things?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Trouble falling asleep, staying asleep, or sleeping too much?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Feeling tired or having little energy?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Poor appetite or overeating?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Feeling bad about yourself or that you're a failure?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Trouble concentrating on things?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Moving or speaking so slowly that others noticed?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Thoughts of being better off dead or hurting yourself?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "Feeling like a failure in life?",
+          "options": [
+            "Nearly every day",
+            "More than half the days",
+            "Neutral",
+            "Several days",
+            "Not at all"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "stress-test",
+      "title": "Stress Level Test (PSS)",
+      "subtitle": "Assesses perceived stress in the last month.",
+      "emoji": "😓",
+      "questions": [
+        {
+          "text": "Been upset because of something unexpected?",
+          "options": [
+            "Very often",
+            "Fairly often",
+            "Sometimes",
+            "Almost never",
+            "Never"
+          ]
+        },
+        {
+          "text": "Felt unable to control important things in life?",
+          "options": [
+            "Very often",
+            "Fairly often",
+            "Sometimes",
+            "Almost never",
+            "Never"
+          ]
+        },
+        {
+          "text": "Felt nervous and stressed?",
+          "options": [
+            "Very often",
+            "Fairly often",
+            "Sometimes",
+            "Almost never",
+            "Never"
+          ]
+        },
+        {
+          "text": "Felt confident about handling personal problems?",
+          "options": [
+            "Never",
+            "Almost never",
+            "Sometimes",
+            "Fairly often",
+            "Very often"
+          ]
+        },
+        {
+          "text": "Felt things were going your way?",
+          "options": [
+            "Never",
+            "Almost never",
+            "Sometimes",
+            "Fairly often",
+            "Very often"
+          ]
+        },
+        {
+          "text": "Found that you could not cope with all the things you had to do?",
+          "options": [
+            "Very often",
+            "Fairly often",
+            "Sometimes",
+            "Almost never",
+            "Never"
+          ]
+        },
+        {
+          "text": "Been able to control irritations in your life?",
+          "options": [
+            "Never",
+            "Almost never",
+            "Sometimes",
+            "Fairly often",
+            "Very often"
+          ]
+        },
+        {
+          "text": "Felt on top of things?",
+          "options": [
+            "Never",
+            "Almost never",
+            "Sometimes",
+            "Fairly often",
+            "Very often"
+          ]
+        },
+        {
+          "text": "Been angered by things outside of your control?",
+          "options": [
+            "Very often",
+            "Fairly often",
+            "Sometimes",
+            "Almost never",
+            "Never"
+          ]
+        },
+        {
+          "text": "Felt difficulties were piling up so high you could not overcome them?",
+          "options": [
+            "Very often",
+            "Fairly often",
+            "Sometimes",
+            "Almost never",
+            "Never"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "self-esteem-test",
+      "title": "Self-Esteem Test (Rosenberg)",
+      "subtitle": "Measures overall sense of self-worth.",
+      "emoji": "🪞",
+      "questions": [
+        {
+          "text": "I feel that I am a person of worth, at least on an equal plane with others.",
+          "options": [
+            "Strongly disagree",
+            "Disagree",
+            "Neutral",
+            "Agree",
+            "Strongly agree"
+          ]
+        },
+        {
+          "text": "I feel that I have a number of good qualities.",
+          "options": [
+            "Strongly disagree",
+            "Disagree",
+            "Neutral",
+            "Agree",
+            "Strongly agree"
+          ]
+        },
+        {
+          "text": "All in all, I am inclined to feel that I am a failure.",
+          "options": [
+            "Strongly agree",
+            "Agree",
+            "Neutral",
+            "Disagree",
+            "Strongly disagree"
+          ]
+        },
+        {
+          "text": "I am able to do things as well as most other people.",
+          "options": [
+            "Strongly disagree",
+            "Disagree",
+            "Neutral",
+            "Agree",
+            "Strongly agree"
+          ]
+        },
+        {
+          "text": "I feel I do not have much to be proud of.",
+          "options": [
+            "Strongly agree",
+            "Agree",
+            "Neutral",
+            "Disagree",
+            "Strongly disagree"
+          ]
+        },
+        {
+          "text": "I take a positive attitude toward myself.",
+          "options": [
+            "Strongly disagree",
+            "Disagree",
+            "Neutral",
+            "Agree",
+            "Strongly agree"
+          ]
+        },
+        {
+          "text": "On the whole, I am satisfied with myself.",
+          "options": [
+            "Strongly disagree",
+            "Disagree",
+            "Neutral",
+            "Agree",
+            "Strongly agree"
+          ]
+        },
+        {
+          "text": "I wish I could have more respect for myself.",
+          "options": [
+            "Strongly agree",
+            "Agree",
+            "Neutral",
+            "Disagree",
+            "Strongly disagree"
+          ]
+        },
+        {
+          "text": "I certainly feel useless at times.",
+          "options": [
+            "Strongly agree",
+            "Agree",
+            "Neutral",
+            "Disagree",
+            "Strongly disagree"
+          ]
+        },
+        {
+          "text": "At times I think I am no good at all.",
+          "options": [
+            "Strongly agree",
+            "Agree",
+            "Neutral",
+            "Disagree",
+            "Strongly disagree"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "burnout-test",
+      "title": "Burnout Test (MBI)",
+      "subtitle": "Measures emotional exhaustion and work-related burnout.",
+      "emoji": "🔥",
+      "questions": [
+        {
+          "text": "I feel emotionally drained from my activities.",
+          "options": [
+            "Always",
+            "Very often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel used up at the end of the day.",
+          "options": [
+            "Always",
+            "Very often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel tired when I get up and have to face another day.",
+          "options": [
+            "Always",
+            "Very often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel burned out from what I do.",
+          "options": [
+            "Always",
+            "Very often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel frustrated by my responsibilities.",
+          "options": [
+            "Always",
+            "Very often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel I am working too hard.",
+          "options": [
+            "Always",
+            "Very often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel motivated and energized by my activities.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Very often",
+            "Always"
+          ]
+        },
+        {
+          "text": "I feel satisfied with what I accomplish.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Very often",
+            "Always"
+          ]
+        },
+        {
+          "text": "I feel my work has meaning.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Very often",
+            "Always"
+          ]
+        },
+        {
+          "text": "I feel balanced between rest and responsibility.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Very often",
+            "Always"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "social-anxiety-test",
+      "title": "Social Anxiety Test (SPIN)",
+      "subtitle": "Measures fear and avoidance in social situations.",
+      "emoji": "😳",
+      "questions": [
+        {
+          "text": "I am afraid of people in authority.",
+          "options": [
+            "Extremely",
+            "Very much",
+            "Moderately",
+            "A little",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "I avoid talking to strangers.",
+          "options": [
+            "Always",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel anxious in social gatherings.",
+          "options": [
+            "Always",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I fear being embarrassed in public.",
+          "options": [
+            "Extremely",
+            "Very much",
+            "Moderately",
+            "A little",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "I avoid being the center of attention.",
+          "options": [
+            "Always",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel nervous speaking in front of others.",
+          "options": [
+            "Always",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel comfortable interacting socially.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Often",
+            "Always"
+          ]
+        },
+        {
+          "text": "I can express myself confidently.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Often",
+            "Always"
+          ]
+        },
+        {
+          "text": "I enjoy social situations.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Often",
+            "Always"
+          ]
+        },
+        {
+          "text": "I feel relaxed around people.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Often",
+            "Always"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adhd-test",
+      "title": "ADHD Test (ASRS)",
+      "subtitle": "Screens attention and hyperactivity symptoms.",
+      "emoji": "⚡",
+      "questions": [
+        {
+          "text": "I have trouble finishing tasks.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I have difficulty organizing tasks.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I forget appointments or obligations.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I avoid tasks requiring sustained effort.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel restless or fidgety.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I interrupt others while talking.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I can focus on tasks without distraction.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Often",
+            "Very often"
+          ]
+        },
+        {
+          "text": "I manage my time effectively.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Often",
+            "Very often"
+          ]
+        },
+        {
+          "text": "I complete tasks on schedule.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Often",
+            "Very often"
+          ]
+        },
+        {
+          "text": "I stay calm during long activities.",
+          "options": [
+            "Never",
+            "Rarely",
+            "Sometimes",
+            "Often",
+            "Very often"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ptsd-test",
+      "title": "PTSD Test (PCL-5)",
+      "subtitle": "Assesses trauma-related symptoms.",
+      "emoji": "🧠",
+      "questions": [
+        {
+          "text": "I have unwanted memories of a traumatic event.",
+          "options": [
+            "Extremely",
+            "Quite a bit",
+            "Moderately",
+            "A little",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "I have nightmares about the event.",
+          "options": [
+            "Extremely",
+            "Quite a bit",
+            "Moderately",
+            "A little",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "I avoid reminders of the event.",
+          "options": [
+            "Extremely",
+            "Quite a bit",
+            "Moderately",
+            "A little",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "I feel constantly on guard.",
+          "options": [
+            "Extremely",
+            "Quite a bit",
+            "Moderately",
+            "A little",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "I feel detached from others.",
+          "options": [
+            "Extremely",
+            "Quite a bit",
+            "Moderately",
+            "A little",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "I have trouble sleeping.",
+          "options": [
+            "Extremely",
+            "Quite a bit",
+            "Moderately",
+            "A little",
+            "Not at all"
+          ]
+        },
+        {
+          "text": "I feel safe in daily life.",
+          "options": [
+            "Not at all",
+            "A little",
+            "Moderately",
+            "Quite a bit",
+            "Extremely"
+          ]
+        },
+        {
+          "text": "I feel emotionally stable.",
+          "options": [
+            "Not at all",
+            "A little",
+            "Moderately",
+            "Quite a bit",
+            "Extremely"
+          ]
+        },
+        {
+          "text": "I can relax without fear.",
+          "options": [
+            "Not at all",
+            "A little",
+            "Moderately",
+            "Quite a bit",
+            "Extremely"
+          ]
+        },
+        {
+          "text": "I feel in control of my reactions.",
+          "options": [
+            "Not at all",
+            "A little",
+            "Moderately",
+            "Quite a bit",
+            "Extremely"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ocd-test",
+      "title": "OCD Test (OCI-R)",
+      "subtitle": "Measures obsessive and compulsive behaviors.",
+      "emoji": "🔁",
+      "questions": [
+        {
+          "text": "I have intrusive thoughts I can't control.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I feel compelled to repeat actions.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I check things repeatedly.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        },
+        {
+          "text": "I worry excessively about contamination.",
+          "options": [
+            "Very often",
+            "Often",
+            "Sometimes",
+            "Rarely",
+            "Never"
+          ]
+        }
+      ]
+    }
+  ]
+}
