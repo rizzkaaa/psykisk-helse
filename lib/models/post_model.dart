@@ -25,7 +25,7 @@ class PostModel extends BasePost {
 
   @override
   String get displayRole {
-    return _role == 'Counsultant' ? "(Counsultant)" : "";
+    return _role == 'counsultant' ? "(Counsultant)" : "";
   }
 
   String get idUser => _idUser;

@@ -98,5 +98,11 @@ class UserModel extends BaseModel {
     };
   }
 
-  bool get isAdmin => _role == 'admin';
+  String get displayRole {
+    return _role == 'counsultant'
+        ? "Counsultant"
+        : _role == "admin"
+        ? "Admin"
+        : '';
+  }
 }

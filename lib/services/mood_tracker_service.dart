@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uas_project/models/mood_model.dart';
 
-class MoodTrackerService {
+class MoodTrackerService extends ChangeNotifier {
+  bool isLoading = false;
+  String? error;
+  MoodModel? moodDataToday;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   final List<Map<String, String>> moodData = [
@@ -35,7 +39,48 @@ class MoodTrackerService {
       "text": "You're glowing today. Keep being proud of how far you've come.",
     },
   ];
+  
+  Future<void> loadMood({bool force = false, required String idUser}) async {
+    if (isLoading) return;
+    if (moodDataToday != null && !force) return;
 
+    isLoading = true;
+    error = null;
+    notifyListeners();
+
+    try {
+      final now = DateTime.now();
+      final startOfDay = DateTime(now.year, now.month, now.day);
+      final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59, 999);
+
+      final snapshot = await _firestore
+          .collection('mood_logs')
+          .where('idUser', isEqualTo: idUser)
+          .where(
+            'created_at',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
+          )
+          .where(
+            'created_at',
+            isLessThanOrEqualTo: Timestamp.fromDate(endOfDay),
+          )
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        moodDataToday = MoodModel.fromFirestore(snapshot.docs.first);
+      } else {
+        moodDataToday = null;
+      }
+    } catch (e) {
+      error = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  
   Future<List<MoodQuestion>> loadQuestions() async {
     final String response = await rootBundle.loadString(
       'assets/data/questions.json',
@@ -108,8 +153,9 @@ class MoodTrackerService {
         'indicator_lottie': indicatorLottie,
         'answers': answers.map((k, v) => MapEntry(k, v.teks)),
         'note': note ?? "",
-        'created_at': FieldValue.serverTimestamp(),
+        'created_at':  Timestamp.fromDate(DateTime.now()),
       });
+      notifyListeners();
     } catch (e) {
       print(e);
     }

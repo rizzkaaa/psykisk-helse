@@ -5,10 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/models/mood_model.dart';
 import 'package:uas_project/screens/mood_tracker/card_question.dart';
-import 'package:uas_project/screens/mood_tracker/mood_tracker_screen1.dart';
-import 'package:flutter/services.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:convert';
 
 import 'package:uas_project/services/mood_tracker_service.dart';
 
@@ -75,7 +71,7 @@ class _AskMoodState extends State<AskMood> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Saved!")));
-      Navigator.pop(context);
+      Navigator.pushNamed(context, "/moodTracker");
     } catch (e) {
       ScaffoldMessenger.of(
         context,
@@ -118,12 +114,7 @@ class _AskMoodState extends State<AskMood> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.reply, color: Color(0xFF73a664)),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MoodTrackerScreen1(),
-                    ),
-                  ),
+                  onPressed: () => Navigator.pushNamed(context, "/moodTracker"),
                   tooltip: "Back",
                 ),
               ],
@@ -261,7 +252,7 @@ class _AskMoodState extends State<AskMood> {
                       ),
                       const SizedBox(width: 12),
                       GestureDetector(
-                        onTap: () => _submitData(user!.docId!),
+                        onTap: () => _submitData(user.docId!),
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: inset.BoxDecoration(

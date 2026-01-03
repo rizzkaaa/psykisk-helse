@@ -8,8 +8,8 @@ import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
 import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/post_model.dart';
 import 'package:uas_project/screens/community/card_post.dart';
-import 'package:uas_project/screens/psychology_test/psychology_test_list.dart';
 import 'package:uas_project/services/community_service.dart';
+import 'package:uas_project/services/mood_tracker_service.dart';
 import 'package:uas_project/widgets/tab_menu_home.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -28,9 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AuthController>().loadUser();
-    });
     _checkLogin();
     postsData = _communityService.getPostsStream();
   }
@@ -41,19 +38,23 @@ class _HomeScreenState extends State<HomeScreen> {
     final level = prefs.getString('userLevel');
 
     if (uid == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushNamed(context, "/");
-      });
+      if (!mounted) return;
+      Navigator.pushNamed(context, "/");
+      return;
     }
 
     setState(() {
       userID = uid;
       userLevel = level;
     });
+
+    context.read<MoodTrackerService>().loadMood(idUser: uid);
+    context.read<AuthController>().loadUser();
   }
 
   @override
   Widget build(BuildContext context) {
+    final mood = context.watch<MoodTrackerService>();
     final auth = context.watch<AuthController>();
     final user = auth.userData;
 
@@ -115,7 +116,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: user == null
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF5A7863)))
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFF5A7863)),
+            )
           : Column(
               children: [
                 Container(
@@ -153,12 +156,31 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ],
                       ),
-                      Lottie.asset(
-                        "assets/animation/happy-emoji.json",
-                        width: 200,
-                        height: 200,
-                        fit: BoxFit.contain,
+                      mood.moodDataToday == null
+                          ? Lottie.asset(
+                              "assets/animation/confused-emoji.json",
+                              width: 170,
+                              height: 170,
+                              fit: BoxFit.contain,
+                            )
+                          : Lottie.asset(
+                              "assets/animation/${mood.moodDataToday!.indicatorLottie}",
+                              width: 170,
+                              height: 170,
+                              fit: BoxFit.contain,
+                            ),
+                      Text(
+                        mood.moodDataToday == null
+                            ? "There's no data for your mood today, you can track your mood at 08.00 PM. Stay soon!"
+                            : mood.moodData[mood
+                                  .moodDataToday!
+                                  .indicatorScore]["text"]!,
+                        style: GoogleFonts.bricolageGrotesque(
+                          color: Color(0xFFEBF4DD),
+                        ),
+                        textAlign: TextAlign.center,
                       ),
+                      const SizedBox(height: 10),
                       Container(
                         decoration: inset.BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -228,23 +250,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       scrollDirection: Axis.horizontal,
                       children: [
                         TabMenuHome(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => PsychologyTestList()));
-                          },
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            "/psychologyTestList",
+                          ),
                           icon: Icons.psychology,
                           title: "Psychology",
                           titleOpsional: "Test",
                         ),
                         const SizedBox(width: 20),
                         TabMenuHome(
-                          onPressed: () {},
-                          icon: Icons.menu_book,
-                          title: "Education",
-                          titleOpsional: "Content",
-                        ),
-                        const SizedBox(width: 20),
-                        TabMenuHome(
-                          onPressed: () {},
+                          onPressed: () =>
+                              Navigator.pushNamed(context, "/counseling"),
                           icon: Icons.forum,
                           title: "Counseling",
                         ),
@@ -308,7 +325,140 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-      drawer: Drawer(),
+      drawer: Drawer(
+        backgroundColor: const Color(0xFF6B8E7B),
+        child: Column(
+          children: [
+            SafeArea(
+              child: Lottie.asset(
+                "assets/animation/love.json",
+                width: 170,
+                height: 170,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            Expanded(
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                decoration: inset.BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                  boxShadow: [
+                    inset.BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      blurRadius: 4,
+                      offset: Offset(1, 1),
+                      inset: true,
+                    ),
+                    inset.BoxShadow(
+                      color: Colors.grey.withOpacity(0.7),
+                      blurRadius: 4,
+                      offset: Offset(-1, 1),
+                      inset: true,
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      leading: Icon(
+                        Icons.person,
+                        color: const Color(0xFF6B8E7B),
+                        size: 30,
+                      ),
+                      title: Text(
+                        "Account",
+                        style: GoogleFonts.modernAntiqua(
+                          color: const Color(0xFF6B8E7B),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, "/profilePage"),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.group,
+                        color: const Color(0xFF6B8E7B),
+                        size: 30,
+                      ),
+                      title: Text(
+                        "User List",
+                        style: GoogleFonts.modernAntiqua(
+                          color: const Color(0xFF6B8E7B),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, "/userList"),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.assignment_ind,
+                        color: const Color(0xFF6B8E7B),
+                        size: 30,
+                      ),
+                      title: Text(
+                        "Counsultant Registration Request",
+                        style: GoogleFonts.modernAntiqua(
+                          color: const Color(0xFF6B8E7B),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, "/requestList"),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.assignment_ind,
+                        color: const Color(0xFF6B8E7B),
+                        size: 30,
+                      ),
+                      title: Text(
+                        "Apply As Counsultant",
+                        style: GoogleFonts.modernAntiqua(
+                          color: const Color(0xFF6B8E7B),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () =>
+                          Navigator.pushNamed(context, "/counsultantRegis"),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.delete,
+                        color: const Color(0xFF6B8E7B),
+                        size: 30,
+                      ),
+                      title: Text(
+                        "Delete Account",
+                        style: GoogleFonts.modernAntiqua(
+                          color: const Color(0xFF6B8E7B),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, "/profilePage"),
+                    ),
+                    ListTile(
+                      leading: Icon(
+                        Icons.help_outline_sharp,
+                        color: const Color(0xFF6B8E7B),
+                        size: 30,
+                      ),
+                      title: Text(
+                        "Contact Us",
+                        style: GoogleFonts.modernAntiqua(
+                          color: const Color(0xFF6B8E7B),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () => Navigator.pushNamed(context, "/profilePage"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -2,38 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class SearchField extends StatefulWidget {
-  final VoidCallback onPressed;
+  final TextEditingController controller;
+  final ValueChanged<String> onSubmitted;
+  final VoidCallback onClear;
 
-  const SearchField({super.key, required this.onPressed});
+  const SearchField({
+    super.key,
+    required this.onSubmitted,
+    required this.onClear,
+    required this.controller,
+  });
 
   @override
   State<SearchField> createState() => _SearchFieldState();
 }
 
 class _SearchFieldState extends State<SearchField> {
-  final TextEditingController _searchController = TextEditingController();
-
-  void _clearSearch() {
-    setState(() {
-      _searchController.clear();
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: TextField(
-            controller: _searchController,
+            controller: widget.controller,
+            onSubmitted: widget.onSubmitted,
             onChanged: (value) {
-              setState(() {});
+              if(value.isEmpty){
+                widget.onClear();
+              }
             },
             decoration: InputDecoration(
               hint: Text(
@@ -45,22 +41,19 @@ class _SearchFieldState extends State<SearchField> {
             style: GoogleFonts.bricolageGrotesque(),
           ),
         ),
-        _searchController.text.isNotEmpty
+        widget.controller.text.isNotEmpty
             ? IconButton(
-                onPressed: _clearSearch,
+                onPressed: widget.onClear,
                 icon: Icon(
                   Icons.close,
                   color: Color(0xFF73a664),
                   fontWeight: FontWeight.bold,
                 ),
               )
-            : IconButton(
-                onPressed: widget.onPressed,
-                icon: Icon(
-                  Icons.search,
-                  color: Color(0xFF73a664),
-                  fontWeight: FontWeight.bold,
-                ),
+            : Icon(
+                Icons.search,
+                color: Color(0xFF73a664),
+                fontWeight: FontWeight.bold,
               ),
       ],
     );

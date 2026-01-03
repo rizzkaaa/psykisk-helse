@@ -102,6 +102,14 @@ class AuthService {
     return UserModel.fromFirestore(doc);
   }
 
+  Future<List<UserModel>> getConsultant() async {
+    final snapshot = await _userRef
+        .where("role", isEqualTo: 'counsultant')
+        .get();
+
+    return snapshot.docs.map((doc) => UserModel.fromFirestore(doc)).toList();
+  }
+
   Future<UserModel> getUserByUsername(String username) async {
     final query = await _userRef
         .where("username", isEqualTo: username)
@@ -111,12 +119,18 @@ class AuthService {
     return UserModel.fromFirestore(query.docs.first);
   }
 
-  Future<List<UserModel>> searchUserByEmail(String query) async {
+  Future<List<UserModel>> searchUser(String query) async {
     final snapshot = await _userRef.get();
+
+    final q = query.toLowerCase();
 
     final results = snapshot.docs
         .map((doc) => UserModel.fromFirestore(doc))
-        .where((user) => user.email.toLowerCase().contains(query.toLowerCase()))
+        .where(
+          (user) =>
+              user.email.toLowerCase().contains(q) ||
+              user.username.toLowerCase().contains(q),
+        )
         .toList();
 
     return results;
@@ -137,6 +151,26 @@ class AuthService {
       return add
           ? "Pengguna telah menjadi admin"
           : "Admin telah menjadi pengguna";
+    } catch (e) {
+      return "Error: $e";
+    }
+  }
+
+  Future<String> setCounsultant(bool add, String idUser) async {
+    try {
+      final userCheck = await _userRef.doc(idUser).get();
+
+      if (!userCheck.exists) {
+        return "User tidak ada";
+      }
+
+      await _userRef.doc(idUser).update({'role': add ? 'counsultant' : 'user'});
+
+      // notifService.createPersonalNotif(idUser, add ? 'addAdmin' : 'unAdmin');
+
+      return add
+          ? "Pengguna telah menjadi Counsultant"
+          : "Counsultant telah menjadi pengguna";
     } catch (e) {
       return "Error: $e";
     }

@@ -56,6 +56,23 @@ class AuthController extends ChangeNotifier {
     return error == null;
   }
 
+  Future<List<UserModel>> fetchAllUser() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final users = await _authService.getAllUsers();
+
+      isLoading = false;
+      notifyListeners();
+      return users;
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw Exception('Gagal mengambil data');
+    }
+  }
+
   Future<UserModel> getProfile() async {
     try {
       isLoading = true;
@@ -73,11 +90,29 @@ class AuthController extends ChangeNotifier {
     }
   }
 
+  Future<List<UserModel>> fetchConsultant() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final counsultant = await _authService.getConsultant();
+
+      isLoading = false;
+      notifyListeners();
+      return counsultant;
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw Exception('Gagal mengambil data');
+    }
+  }
+
   Future<UserModel?> fetchUserByID(String idUser) async {
     isLoading = true;
     notifyListeners();
 
     try {
+      print(idUser);
       final user = await _authService.getUserByID(idUser);
       isLoading = false;
       notifyListeners();
@@ -152,13 +187,64 @@ class AuthController extends ChangeNotifier {
     }
   }
 
+  Future<List<UserModel>> searchUser(String query) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final users = await _authService.searchUser(query);
+
+      isLoading = false;
+      notifyListeners();
+      return users;
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw Exception('Gagal mengambil data');
+    }
+  }
+
+  Future<String> setAdmin(bool add, String idUser) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final message = await _authService.setAdmin(add, idUser);
+
+      isLoading = false;
+      notifyListeners();
+      return message;
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw Exception('Failed set');
+    }
+  }
+
   Future<void> logout() async {
     isLoading = true;
     notifyListeners();
 
     await _authService.logout();
+    userData = null;
 
     isLoading = false;
     notifyListeners();
+  }
+
+  Future<void> deleteAcc(String idUser) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      await _authService.deleteAccount(idUser);
+
+      isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      isLoading = false;
+      notifyListeners();
+      throw Exception('Failed set');
+    }
   }
 }

@@ -81,7 +81,7 @@ class _MoodTrackerScreenState extends State<MoodTrackerScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.reply, color: Color(0xFF73a664)),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pushNamed(context, "/homeScreen"),
                   tooltip: "Back",
                 ),
               ],

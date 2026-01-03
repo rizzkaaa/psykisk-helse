@@ -7,6 +7,8 @@ import 'package:uas_project/screens/profile_screen/edit_password.dart';
 import 'package:uas_project/screens/profile_screen/edit_profile.dart';
 import 'package:uas_project/screens/profile_screen/profile_info_card.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
+import 'package:uas_project/widgets/confirm_dialog.dart';
+import 'package:uas_project/widgets/tab_menu_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -52,7 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Color(0xFFEBF4DD),
       body: user == null
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF5A7863)))
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFF5A7863)),
+            )
           : Column(
               children: [
                 Stack(
@@ -130,10 +134,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 Icons.logout,
                                 color: Color(0xFF5A7863),
                               ),
-                              onPressed: () async {
-                                Navigator.pushNamed(context, "/signIn");
-                                await auth.logout();
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) {
+                                    return ConfirmDialog(
+                                      title: "Are you sure want to sign out?",
+                                      onConfirm: () async {
+                                        Navigator.pushNamed(context, "/signIn");
+                                        await auth.logout();
+                                      },
+                                    );
+                                  },
+                                );
                               },
+
                               tooltip: "Sign Out",
                             ),
                           ],
@@ -182,6 +198,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
+                const SizedBox(height: 24),
+                Container(
+                  height: 60,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.5),
+                    border: Border.symmetric(
+                      horizontal: BorderSide(color: Colors.white, width: 2),
+                    ),
+                  ),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      TabMenuProfile(
+                        onTap: () {},
+                        icon: Icons.person,
+                        label: "Data",
+                      ),
+                      TabMenuProfile(
+                        onTap: () {},
+                        icon: Icons.favorite,
+                        label: "Favorite",
+                      ),
+                      TabMenuProfile(
+                        onTap: () {},
+                        icon: Icons.bookmark,
+                        label: "Bookmark",
+                      ),
+                      TabMenuProfile(
+                        onTap: () {},
+                        icon: Icons.chat_bubble,
+                        label: "Post",
+                      ),
+                      TabMenuProfile(
+                        onTap: () {},
+                        icon: Icons.book,
+                        label: "Journal",
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 24),
 
                 Padding(

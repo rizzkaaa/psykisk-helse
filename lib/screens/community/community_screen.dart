@@ -133,7 +133,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 ],
                 color: Colors.white,
               ),
-              child: SearchField(onPressed: () {}),
+              // child: SearchField(onPressed: () {}),
             ),
           ),
 
