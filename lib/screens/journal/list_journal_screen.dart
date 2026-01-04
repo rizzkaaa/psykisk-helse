@@ -9,7 +9,6 @@ import 'package:uas_project/screens/journal/create_journal.dart';
 import 'package:uas_project/screens/journal/journal_screen.dart';
 import 'package:uas_project/services/journal_service.dart';
 import 'package:uas_project/widgets/search_field.dart';
-import 'package:uas_project/widgets/tab_menu_profile.dart';
 
 class ListJournalScreen extends StatefulWidget {
   const ListJournalScreen({super.key});
