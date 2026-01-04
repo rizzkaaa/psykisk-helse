@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
+import 'package:uas_project/controllers/notification_controller.dart';
 import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/post_model.dart';
 import 'package:uas_project/screens/community/card_post.dart';
@@ -22,6 +23,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String? userID;
   String? userLevel;
+  bool _notifSent = false;
+  final NotificationController _notificationController =
+      NotificationController();
   final CommunityService _communityService = CommunityService();
   late Stream<List<PostModel>> postsData;
 
@@ -48,8 +52,35 @@ class _HomeScreenState extends State<HomeScreen> {
       userLevel = level;
     });
 
-    context.read<MoodTrackerService>().loadMood(idUser: uid);
-    context.read<AuthController>().loadUser();
+    await context.read<MoodTrackerService>().loadMood(idUser: uid);
+    await context.read<AuthController>().loadUser();
+
+    final mood = context.read<MoodTrackerService>();
+    final auth = context.read<AuthController>();
+
+    if (auth.userData == null) return;
+
+    if (mood.moodDataToday == null && isAvailable() && !_notifSent) {
+      _notifSent = true;
+      print("send");
+      await sendNotif(auth.userData!.docId!);
+    }
+  }
+
+  bool isAvailable() {
+    final now = DateTime.now();
+    final start = DateTime(now.year, now.month, now.day, 20); 
+    final end = DateTime(now.year, now.month, now.day, 23, 59, 59); 
+
+    return now.isAfter(start) && now.isBefore(end);
+  }
+
+  Future<void> sendNotif(String userID) async {
+    try {
+      await _notificationController.sendNotif(userID, "reminder");
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -86,16 +117,48 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             child: Row(
               children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/notification");
+                StreamBuilder<int>(
+                  stream: _notificationController.countUnRead,
+                  builder: (context, snapshot) {
+                    final unreadCount = snapshot.data ?? 0;
+
+                    return Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, "/notification");
+                          },
+                          tooltip: "Notification",
+                          icon: Icon(
+                            Icons.notification_important,
+                            color: Color(0xFF5C8374),
+                          ),
+                        ),
+                        if (unreadCount > 0)
+                          Positioned(
+                            top: 3,
+                            right: 3,
+                            child: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: Color(0xFF5C8374),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Text(
+                                '$unreadCount',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
                   },
-                  tooltip: "Notification",
-                  icon: Icon(
-                    Icons.notification_important,
-                    color: Color(0xFF5C8374),
-                  ),
                 ),
+
                 IconButton(
                   onPressed: () {
                     Navigator.pushNamed(context, "/chatbot");
@@ -171,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                       Text(
                         mood.moodDataToday == null
-                            ? "There's no data for your mood today, you can track your mood at 08.00 PM. Stay soon!"
+                            ? "There's no mood data for today yet. You can track your mood at 08:00 PM. Stay tuned!"
                             : mood.moodData[mood
                                   .moodDataToday!
                                   .indicatorScore]["text"]!,
@@ -325,140 +388,192 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
 
-      drawer: Drawer(
-        backgroundColor: const Color(0xFF6B8E7B),
-        child: Column(
-          children: [
-            SafeArea(
-              child: Lottie.asset(
-                "assets/animation/love.json",
-                width: 170,
-                height: 170,
-                fit: BoxFit.contain,
-              ),
-            ),
+      drawer: user == null
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFF5A7863)),
+            )
+          : Drawer(
+              backgroundColor: const Color(0xFF6B8E7B),
+              child: Column(
+                children: [
+                  SafeArea(
+                    child: Lottie.asset(
+                      "assets/animation/love.json",
+                      width: 170,
+                      height: 170,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
 
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 30),
-                decoration: inset.BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                  boxShadow: [
-                    inset.BoxShadow(
-                      color: Colors.grey.withOpacity(0.7),
-                      blurRadius: 4,
-                      offset: Offset(1, 1),
-                      inset: true,
-                    ),
-                    inset.BoxShadow(
-                      color: Colors.grey.withOpacity(0.7),
-                      blurRadius: 4,
-                      offset: Offset(-1, 1),
-                      inset: true,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    ListTile(
-                      leading: Icon(
-                        Icons.person,
-                        color: const Color(0xFF6B8E7B),
-                        size: 30,
-                      ),
-                      title: Text(
-                        "Account",
-                        style: GoogleFonts.modernAntiqua(
-                          color: const Color(0xFF6B8E7B),
-                          fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      decoration: inset.BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30),
                         ),
+                        boxShadow: [
+                          inset.BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            blurRadius: 4,
+                            offset: Offset(1, 1),
+                            inset: true,
+                          ),
+                          inset.BoxShadow(
+                            color: Colors.grey.withOpacity(0.7),
+                            blurRadius: 4,
+                            offset: Offset(-1, 1),
+                            inset: true,
+                          ),
+                        ],
                       ),
-                      onTap: () => Navigator.pushNamed(context, "/profileScreen"),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: Icon(
+                              Icons.person,
+                              color: const Color(0xFF6B8E7B),
+                              size: 30,
+                            ),
+                            title: Text(
+                              "My Account",
+                              style: GoogleFonts.modernAntiqua(
+                                color: const Color(0xFF6B8E7B),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () =>
+                                Navigator.pushNamed(context, "/profileScreen"),
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.notifications,
+                              color: const Color(0xFF6B8E7B),
+                              size: 30,
+                            ),
+                            title: Text(
+                              "Notification",
+                              style: GoogleFonts.modernAntiqua(
+                                color: const Color(0xFF6B8E7B),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () =>
+                                Navigator.pushNamed(context, "/notification"),
+                          ),
+                          ListTile(
+                            leading: Icon(
+                              Icons.notifications,
+                              color: const Color(0xFF6B8E7B),
+                              size: 30,
+                            ),
+                            title: Text(
+                              "Your AI Friend",
+                              style: GoogleFonts.modernAntiqua(
+                                color: const Color(0xFF6B8E7B),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onTap: () =>
+                                Navigator.pushNamed(context, "/chatbot"),
+                          ),
+                          if (user.role == 'admin')
+                            Column(
+                              children: [
+                                ListTile(
+                                  leading: Icon(
+                                    Icons.group,
+                                    color: const Color(0xFF6B8E7B),
+                                    size: 30,
+                                  ),
+                                  title: Text(
+                                    "User List",
+                                    style: GoogleFonts.modernAntiqua(
+                                      color: const Color(0xFF6B8E7B),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onTap: () =>
+                                      Navigator.pushNamed(context, "/userList"),
+                                ),
+
+                                ListTile(
+                                  leading: Icon(
+                                    Icons.assignment_ind,
+                                    color: const Color(0xFF6B8E7B),
+                                    size: 30,
+                                  ),
+                                  title: Text(
+                                    "Counsultant Registration Request",
+                                    style: GoogleFonts.modernAntiqua(
+                                      color: const Color(0xFF6B8E7B),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  onTap: () => Navigator.pushNamed(
+                                    context,
+                                    "/requestList",
+                                  ),
+                                ),
+                              ],
+                            ),
+                          if (user.role == 'user')
+                            ListTile(
+                              leading: Icon(
+                                Icons.assignment_ind,
+                                color: const Color(0xFF6B8E7B),
+                                size: 30,
+                              ),
+                              title: Text(
+                                "Apply As Counsultant",
+                                style: GoogleFonts.modernAntiqua(
+                                  color: const Color(0xFF6B8E7B),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onTap: () => Navigator.pushNamed(
+                                context,
+                                "/counsultantRegis",
+                              ),
+                            ),
+                          // ListTile(
+                          //   leading: Icon(
+                          //     Icons.delete,
+                          //     color: const Color(0xFF6B8E7B),
+                          //     size: 30,
+                          //   ),
+                          //   title: Text(
+                          //     "Delete Account",
+                          //     style: GoogleFonts.modernAntiqua(
+                          //       color: const Color(0xFF6B8E7B),
+                          //       fontWeight: FontWeight.bold,
+                          //     ),
+                          //   ),
+                          //   onTap: () => Navigator.pushNamed(context, "/profileScreen"),
+                          // ),
+                          // ListTile(
+                          //   leading: Icon(
+                          //     Icons.help_outline_sharp,
+                          //     color: const Color(0xFF6B8E7B),
+                          //     size: 30,
+                          //   ),
+                          //   title: Text(
+                          //     "Contact Us",
+                          //     style: GoogleFonts.modernAntiqua(
+                          //       color: const Color(0xFF6B8E7B),
+                          //       fontWeight: FontWeight.bold,
+                          //     ),
+                          //   ),
+                          //   onTap: () => Navigator.pushNamed(context, "/profileScreen"),
+                          // ),
+                        ],
+                      ),
                     ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.group,
-                        color: const Color(0xFF6B8E7B),
-                        size: 30,
-                      ),
-                      title: Text(
-                        "User List",
-                        style: GoogleFonts.modernAntiqua(
-                          color: const Color(0xFF6B8E7B),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () => Navigator.pushNamed(context, "/userList"),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.assignment_ind,
-                        color: const Color(0xFF6B8E7B),
-                        size: 30,
-                      ),
-                      title: Text(
-                        "Counsultant Registration Request",
-                        style: GoogleFonts.modernAntiqua(
-                          color: const Color(0xFF6B8E7B),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () => Navigator.pushNamed(context, "/requestList"),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.assignment_ind,
-                        color: const Color(0xFF6B8E7B),
-                        size: 30,
-                      ),
-                      title: Text(
-                        "Apply As Counsultant",
-                        style: GoogleFonts.modernAntiqua(
-                          color: const Color(0xFF6B8E7B),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () =>
-                          Navigator.pushNamed(context, "/counsultantRegis"),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.delete,
-                        color: const Color(0xFF6B8E7B),
-                        size: 30,
-                      ),
-                      title: Text(
-                        "Delete Account",
-                        style: GoogleFonts.modernAntiqua(
-                          color: const Color(0xFF6B8E7B),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () => Navigator.pushNamed(context, "/profileScreen"),
-                    ),
-                    ListTile(
-                      leading: Icon(
-                        Icons.help_outline_sharp,
-                        color: const Color(0xFF6B8E7B),
-                        size: 30,
-                      ),
-                      title: Text(
-                        "Contact Us",
-                        style: GoogleFonts.modernAntiqua(
-                          color: const Color(0xFF6B8E7B),
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      onTap: () => Navigator.pushNamed(context, "/profileScreen"),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

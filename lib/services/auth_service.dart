@@ -5,11 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/users_model.dart';
+import 'package:uas_project/services/notification_service.dart';
 
 class AuthService {
   final _auth = FirebaseAuth.instance;
   final _userRef = FirebaseFirestore.instance.collection('users');
-  // final NotificationService notifService = NotificationService();
+  final NotificationService notifService = NotificationService();
 
   Future<String?> register(
     String username,
@@ -40,7 +41,7 @@ class AuthService {
         "isActive": true,
       });
 
-      // notifService.createPersonalNotif(cred.user!.uid, 'welcome');
+      await notifService.createPersonalNotif(cred.user!.uid, "welcome");
 
       return null;
     } on FirebaseAuthException catch (e) {

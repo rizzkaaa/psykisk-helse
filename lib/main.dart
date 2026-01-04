@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
+import 'package:uas_project/controllers/notification_controller.dart';
 import 'package:uas_project/firebase_options.dart';
 import 'package:uas_project/onboarding_page.dart';
 import 'package:uas_project/screens/audio_relaxation/playlist_screen.dart';
@@ -32,6 +33,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthController()),
+
+        ChangeNotifierProvider(create: (_) => NotificationController()),
         ChangeNotifierProvider(create: (_) => MoodTrackerService()),
       ],
       child: MyApp(),
@@ -49,8 +52,7 @@ class MyApp extends StatelessWidget {
       title: 'Psykisk Helse',
       initialRoute: "/",
       routes: {
-        // '/': (context) => const SplashScreen(),
-        '/': (context) => const WelcomeScreen(),
+        '/': (context) => const SplashScreen(),
         '/onboarding': (context) => const OnboardingScreen(),
         '/welcomeScreen': (context) => const WelcomeScreen(),
         '/signIn': (context) => const AuthScreen(isSignIn: true),

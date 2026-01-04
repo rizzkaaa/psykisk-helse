@@ -27,6 +27,10 @@ extension TimeAgoExtension on DateTime {
   }
 }
 
+extension TimestampTimeAgo on Timestamp {
+  String get timeAgoTimestamp => toDate().timeAgo;
+}
+
 extension Base64ImageExtension on String? {
   ImageProvider toImageProvider({
     ImageProvider fallback = const AssetImage('assets/images/default-ava.png'),
