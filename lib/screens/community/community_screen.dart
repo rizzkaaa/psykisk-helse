@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
+import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/models/post_model.dart';
+import 'package:uas_project/models/users_model.dart';
 import 'package:uas_project/screens/community/card_post.dart';
+import 'package:uas_project/screens/community/card_user.dart';
 import 'package:uas_project/services/community_service.dart';
 import 'package:uas_project/widgets/search_field.dart';
 
@@ -13,14 +16,62 @@ class CommunityScreen extends StatefulWidget {
   State<CommunityScreen> createState() => _CommunityScreenState();
 }
 
+enum CommunityContent { posts, users }
+
 class _CommunityScreenState extends State<CommunityScreen> {
   final CommunityService _communityService = CommunityService();
   late Stream<List<PostModel>> postsData;
+  final AuthController _userController = AuthController();
+  late Future<List<UserModel>> userData;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
+  CommunityContent activeContent = CommunityContent.posts;
 
   @override
   void initState() {
     super.initState();
-    postsData = _communityService.getPostsStream();
+    _loadContent();
+  }
+
+  void _loadContent() {
+    setState(() {
+      if (_searchQuery.isEmpty) {
+        activeContent = CommunityContent.posts;
+        postsData = _communityService.getPostsStream();
+      } else {
+        activeContent = CommunityContent.users;
+        userData = _userController.searchUser(_searchQuery);
+      }
+    });
+  }
+
+  void _performSearch() {
+    final query = _searchController.text.trim();
+    setState(() {
+      _searchQuery = query;
+    });
+    print(_searchQuery);
+    _loadContent();
+  }
+
+  void _clearSearch() {
+    setState(() {
+      _searchController.clear();
+      _searchQuery = '';
+    });
+    _loadContent();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _reloadData() {
+    setState(() {
+      postsData = _communityService.getPostsStream();
+    });
   }
 
   @override
@@ -77,7 +128,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
 
                 IconButton(
                   icon: const Icon(Icons.refresh, color: Color(0xFF73a664)),
-                  onPressed: () {},
+                  onPressed: _reloadData,
                   tooltip: "Refresh",
                 ),
               ],
@@ -133,36 +184,15 @@ class _CommunityScreenState extends State<CommunityScreen> {
                 ],
                 color: Colors.white,
               ),
-              // child: SearchField(onPressed: () {}),
+              child: SearchField(
+                onSubmitted: (value) => _performSearch(),
+                onClear: _clearSearch,
+                controller: _searchController,
+              ),
             ),
           ),
-
-          Expanded(
-            child: StreamBuilder(
-              stream: postsData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(color: Colors.white),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text("There's no post", style: TextStyle(color: Colors.black),));
-                } else {
-                  final posts = snapshot.data!;
-
-                  return ListView.builder(
-                    itemCount: posts.length,
-                    itemBuilder: (context, index) {
-                      final post = posts[index];
-                      return CardPost(post: post,);
-                    },
-                  );
-                }
-              },
-            ),
-          ),
+          const SizedBox(height: 20),
+          Expanded(child: _buildContent()),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -171,5 +201,50 @@ class _CommunityScreenState extends State<CommunityScreen> {
         child: Icon(Icons.add, color: Colors.white),
       ),
     );
+  }
+
+  Widget _buildContent() {
+    switch (activeContent) {
+      case CommunityContent.posts:
+        return StreamBuilder<List<PostModel>>(
+          stream: postsData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text("There's no post"));
+            }
+
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return CardPost(post: snapshot.data![index]);
+              },
+            );
+          },
+        );
+
+      case CommunityContent.users:
+        return FutureBuilder(
+          future: userData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(child: Text("User not found"));
+            }
+
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final user = snapshot.data![index];
+                return Padding(padding: const EdgeInsets.symmetric(horizontal: 20),child:  CardUser(user: user));
+              },
+            );
+          },
+        );
+    }
   }
 }

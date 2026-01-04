@@ -17,6 +17,43 @@ class CommunityService {
         });
   }
 
+  Stream<List<PostModel>> getLikedPosts(String userId) {
+    return _db
+        .collection('users')
+        .doc(userId)
+        .collection('liked')
+        .where('type', isEqualTo: 'post')
+        .snapshots()
+        .asyncMap((likedSnapshot) async {
+          final likedPostIds = likedSnapshot.docs.map((doc) => doc.id).toSet();
+
+          if (likedPostIds.isEmpty) return [];
+
+          final postSnapshot = await _db
+              .collection('posts')
+              .orderBy('timestamp', descending: true)
+              .get();
+
+          return postSnapshot.docs
+              .where((doc) => likedPostIds.contains(doc.id))
+              .map((doc) => PostModel.fromFirestore(doc))
+              .toList();
+        });
+  }
+
+  Stream<List<PostModel>> getPostsStreamByIDuser(String idUser) {
+    return _db
+        .collection('posts')
+        .where("idUser", isEqualTo: idUser)
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs
+              .map((doc) => PostModel.fromFirestore(doc))
+              .toList();
+        });
+  }
+
   Future<void> addPost(
     String idUser,
     String role,
@@ -72,84 +109,77 @@ class CommunityService {
   }
 
   Stream<List<Map<String, dynamic>>> getRepliesStream(String postId) {
-  return _db
-      .collection('posts')
-      .doc(postId)
-      .collection('reply')
-      .orderBy('timestamp', descending: true)
-      .snapshots()
-      .map((snapshot) {
-    List<ReplyPost> allReplies = snapshot.docs
-        .map((doc) => ReplyPost.fromFirestore(doc))
-        .toList();
+    return _db
+        .collection('posts')
+        .doc(postId)
+        .collection('reply')
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          List<ReplyPost> allReplies = snapshot.docs
+              .map((doc) => ReplyPost.fromFirestore(doc))
+              .toList();
 
-    return _organizeRepliesTwoLevel(allReplies);
-  });
-}
-
-List<Map<String, dynamic>> _organizeRepliesTwoLevel(List<ReplyPost> allReplies) {
-  // Map untuk akses cepat
-  Map<String, ReplyPost> repliesMap = {};
-  
-  for (var reply in allReplies) {
-    repliesMap[reply.id] = reply;
+          return _organizeRepliesTwoLevel(allReplies);
+        });
   }
-  
-  // Pisahkan level 1 (comment ke post) dan level 2 (reply ke comment/reply)
-  List<ReplyPost> level1Comments = [];
-  Map<String, List<ReplyPost>> level2ByRootParent = {};
-  
-  // Identifikasi level 1 (comment langsung ke post)
-  for (var reply in allReplies) {
-    if (reply.idReply == null || reply.idReply!.isEmpty) {
-      // Level 1: Comment langsung ke post
-      level1Comments.add(reply);
-      level2ByRootParent[reply.id] = []; // Initialize list untuk replies-nya
+
+  List<Map<String, dynamic>> _organizeRepliesTwoLevel(
+    List<ReplyPost> allReplies,
+  ) {
+    Map<String, ReplyPost> repliesMap = {};
+
+    for (var reply in allReplies) {
+      repliesMap[reply.id] = reply;
     }
-  }
-  
-  // Proses semua reply yang punya parent (level 2)
-  for (var reply in allReplies) {
-    if (reply.idReply != null && reply.idReply!.isNotEmpty) {
-      // Cari root parent (level 1 comment)
-      String rootParentId = _findRootParent(reply.idReply!, repliesMap);
-      
-      // Tambahkan ke level 2 dari root parent
-      if (level2ByRootParent.containsKey(rootParentId)) {
-        level2ByRootParent[rootParentId]!.add(reply);
-      } else {
-        // Jika root parent tidak ditemukan, skip atau handle error
-        print("Warning: Root parent not found for reply ${reply.id}");
+
+    List<ReplyPost> level1Comments = [];
+    Map<String, List<ReplyPost>> level2ByRootParent = {};
+
+    for (var reply in allReplies) {
+      if (reply.idReply == null || reply.idReply!.isEmpty) {
+        level1Comments.add(reply);
+        level2ByRootParent[reply.id] = [];
       }
     }
-  }
-  for (var replies in level2ByRootParent.values) {
-    replies.sort((a, b) => b.timestamp.compareTo(a.timestamp));
-  }
-  // Build result: [{comment: ReplyPost, replies: [ReplyPost]}]
-  List<Map<String, dynamic>> result = [];
-  for (var comment in level1Comments) {
-    result.add({
-      'comment': comment,
-      'replies': level2ByRootParent[comment.id] ?? [],
-    });
-  }
-  
-  return result;
-}
 
-// Helper method untuk mencari root parent (level 1 comment)
-String _findRootParent(String replyId, Map<String, ReplyPost> repliesMap) {
-  ReplyPost? current = repliesMap[replyId];
-  
-  // Telusuri ke atas sampai ketemu yang tidak punya parent (level 1)
-  while (current != null && current.idReply != null && current.idReply!.isNotEmpty) {
-    current = repliesMap[current.idReply];
+    for (var reply in allReplies) {
+      if (reply.idReply != null && reply.idReply!.isNotEmpty) {
+        String rootParentId = _findRootParent(reply.idReply!, repliesMap);
+
+        if (level2ByRootParent.containsKey(rootParentId)) {
+          level2ByRootParent[rootParentId]!.add(reply);
+        } else {
+          print("Warning: Root parent not found for reply ${reply.id}");
+        }
+      }
+    }
+    for (var replies in level2ByRootParent.values) {
+      replies.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    }
+
+    List<Map<String, dynamic>> result = [];
+    for (var comment in level1Comments) {
+      result.add({
+        'comment': comment,
+        'replies': level2ByRootParent[comment.id] ?? [],
+      });
+    }
+
+    return result;
   }
-  
-  // Return ID dari level 1 comment
-  return current?.id ?? replyId;
-}
+
+  String _findRootParent(String replyId, Map<String, ReplyPost> repliesMap) {
+    ReplyPost? current = repliesMap[replyId];
+
+    while (current != null &&
+        current.idReply != null &&
+        current.idReply!.isNotEmpty) {
+      current = repliesMap[current.idReply];
+    }
+
+    return current?.id ?? replyId;
+  }
 
   Future<void> addReply({
     required String postId,
@@ -174,30 +204,4 @@ String _findRootParent(String replyId, Map<String, ReplyPost> repliesMap) {
       'comments': FieldValue.increment(1),
     });
   }
-
-  // 3. Kirim Balasan (Reply) ke Komentar Tertentu
-  // Future<void> addReply(String postId, String commentId, String content) async {
-  //   if (content.trim().isEmpty) return;
-
-  //   final replyData = {
-  //     'username': 'User Kamu',
-  //     'content': content,
-  //     'timestamp': Timestamp.now(), // Simpan waktu lokal saja biar mudah
-  //   };
-
-  //   // Masukkan reply ke dalam array 'replies' di dokumen komentar
-  //   await _db
-  //       .collection('posts')
-  //       .doc(postId)
-  //       .collection('comments')
-  //       .doc(commentId)
-  //       .update({
-  //         'replies': FieldValue.arrayUnion([replyData]),
-  //       });
-
-  //   // Update total comments count juga jika mau reply dihitung
-  //   await _db.collection('posts').doc(postId).update({
-  //     'comments': FieldValue.increment(1),
-  //   });
-  // }
 }

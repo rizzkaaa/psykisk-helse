@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, "/profilePage");
+                    Navigator.pushNamed(context, "/profileScreen");
                   },
                   tooltip: "Your Account",
                   icon: Icon(Icons.person, color: Color(0xFF5C8374)),
@@ -374,7 +374,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onTap: () => Navigator.pushNamed(context, "/profilePage"),
+                      onTap: () => Navigator.pushNamed(context, "/profileScreen"),
                     ),
                     ListTile(
                       leading: Icon(
@@ -435,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onTap: () => Navigator.pushNamed(context, "/profilePage"),
+                      onTap: () => Navigator.pushNamed(context, "/profileScreen"),
                     ),
                     ListTile(
                       leading: Icon(
@@ -450,7 +450,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      onTap: () => Navigator.pushNamed(context, "/profilePage"),
+                      onTap: () => Navigator.pushNamed(context, "/profileScreen"),
                     ),
                   ],
                 ),

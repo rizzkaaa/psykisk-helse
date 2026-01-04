@@ -14,6 +14,8 @@ class JournalService {
         .where((journal) => journal.idUser == idUser)
         .toList();
 
+    results.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
+
     return results;
   }
 
@@ -24,13 +26,35 @@ class JournalService {
         .map((doc) => JournalModel.fromFirestore(doc))
         .where((journal) => journal.isPublic == true)
         .toList();
-
+    results.sort((a, b) => b.createdAt!.compareTo(a.createdAt!));
     return results;
   }
 
   Future<JournalModel> getJournalByID({required String idJournal}) async {
     final doc = await _journalRef.doc(idJournal).get();
     return JournalModel.fromFirestore(doc);
+  }
+
+  Future<List<JournalModel>> getBookmarkedJournal(String userId) async {
+    final postSnapshot = await _journalRef
+        .orderBy('createdAt', descending: true)
+        .get();
+
+    final bookmarkSnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('bookmark')
+        .where('type', isEqualTo: 'journal')
+        .get();
+
+    final bookmarkIds = bookmarkSnapshot.docs
+        .map((doc) => doc['id'] as String)
+        .toSet();
+
+    return postSnapshot.docs
+        .where((doc) => bookmarkIds.contains(doc.id))
+        .map((doc) => JournalModel.fromFirestore(doc))
+        .toList();
   }
 
   Future<JournalModel> addJournal({
@@ -45,7 +69,7 @@ class JournalService {
         "title": title,
         "content": content,
         "isPublic": isPublic,
-        'createAt': Timestamp.fromDate(DateTime.now()),
+        'createdAt': Timestamp.fromDate(DateTime.now()),
       });
       return JournalModel(
         docId: docRef.id,
@@ -56,6 +80,28 @@ class JournalService {
       );
     } catch (e) {
       print("Error menambah journal: $e");
+      rethrow;
+    }
+  }
+
+  Future<JournalModel> editJournal({
+    required String idJournal,
+    required String title,
+    required String content,
+    required bool isPublic,
+  }) async {
+    try {
+      await _journalRef.doc(idJournal).update({
+        "title": title,
+        "content": content,
+        "isPublic": isPublic,
+        "updatedAt": FieldValue.serverTimestamp(),
+      });
+
+      final doc = await _journalRef.doc(idJournal).get();
+      return JournalModel.fromFirestore(doc);
+    } catch (e) {
+      print("Error mengedit journal: $e");
       rethrow;
     }
   }
@@ -111,5 +157,14 @@ class JournalService {
 
     final snap = await userBookmark.get();
     return snap.exists;
+  }
+
+  Future<void> deleteJournal({required String idJournal}) async {
+    try {
+      await _journalRef.doc(idJournal).delete();
+    } catch (e) {
+      print("Failed delete journal: $e");
+      rethrow;
+    }
   }
 }

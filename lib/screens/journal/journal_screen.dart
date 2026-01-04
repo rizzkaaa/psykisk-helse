@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
+import 'package:provider/provider.dart';
+import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/models/journal_model.dart';
 import 'package:uas_project/services/journal_service.dart';
 
@@ -13,14 +15,31 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends State<JournalScreen> {
-  // final JournalService _journalService = JournalService();
-  // late Future<JournalModel> _journalData;
+  final JournalService _journalService = JournalService();
+  bool _isBookmarked = false;
+  bool _loadingBookmark = true;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _journalData = _journalService.getJournalByID(idJournal: widget.idJournal);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _checkBookmark();
+  }
+
+  Future<void> _checkBookmark() async {
+    final auth = context.read<AuthController>();
+    if (auth.userData == null) return;
+
+    final result = await _journalService.isJournalBookmarked(
+      auth.userData!.docId!,
+      widget.journal.docId!,
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _isBookmarked = result;
+      _loadingBookmark = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,10 +129,29 @@ class _JournalScreenState extends State<JournalScreen> {
                   ),
                 ),
 
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.bookmark_add_outlined),
-                ),
+                _loadingBookmark
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : IconButton(
+                        onPressed: () async {
+                          final auth = context.read<AuthController>();
+                          if (auth.userData == null) return;
+
+                          await _journalService.bookmarkJournal(
+                            auth.userData!.docId!,
+                            widget.journal.docId!,
+                          );
+
+                          setState(() {
+                            _isBookmarked = !_isBookmarked;
+                          });
+                        },
+                        icon: Icon(
+                          _isBookmarked
+                              ? Icons.bookmark
+                              : Icons.bookmark_border,
+                          color: Colors.white,
+                        ),
+                      ),
                 const SizedBox(width: 10),
               ],
             ),

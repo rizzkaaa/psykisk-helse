@@ -5,10 +5,20 @@ import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/journal_model.dart';
 import 'package:uas_project/models/users_model.dart';
+import 'package:uas_project/widgets/confirm_dialog.dart';
 
 class CardJournal extends StatefulWidget {
   final JournalModel journal;
-  const CardJournal({super.key, required this.journal});
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  final bool isPublic;
+  const CardJournal({
+    super.key,
+    required this.journal,
+    required this.onDelete,
+    required this.onEdit,
+    required this.isPublic,
+  });
 
   @override
   State<CardJournal> createState() => _CardJournalState();
@@ -94,9 +104,7 @@ class _CardJournalState extends State<CardJournal> {
                   ),
                   subtitle: Text(
                     "Creator: @${user.username}",
-                    style: GoogleFonts.bricolageGrotesque(
-                      color: Colors.grey,
-                    ),
+                    style: GoogleFonts.bricolageGrotesque(color: Colors.grey),
                   ),
                 ),
               ),
@@ -128,12 +136,46 @@ class _CardJournalState extends State<CardJournal> {
                   ),
                   color: Color(0xFFacc990),
                 ),
-                child: Text(
-                  widget.journal.createdAt.toFormattedDate(),
-                  style: GoogleFonts.modernAntiqua(
-                    color: Colors.white,
-                    fontSize: 15,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.journal.createdAt.toFormattedDate(),
+                      style: GoogleFonts.modernAntiqua(
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                    ),
+
+                    if (!widget.isPublic)
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: widget.onEdit,
+                            icon: Icon(
+                              Icons.edit_note_outlined,
+                              color: Colors.white,
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (context) {
+                                  return ConfirmDialog(
+                                    title:
+                                        "Are you sure you want to delete this journal?",
+                                    onConfirm: widget.onDelete,
+                                  );
+                                },
+                              );
+                            },
+                            icon: Icon(Icons.delete, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                  ],
                 ),
               ),
             ],

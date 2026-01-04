@@ -42,7 +42,7 @@ class JournalModel extends BaseModel {
       title: data['title'] ?? '-',
       content: data['content'] ?? '-',
       isPublic: data['isPublic'] ?? false,
-      createdAt: (data['createAt'] as Timestamp?)?.toDate(),
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate(),
     );
   }

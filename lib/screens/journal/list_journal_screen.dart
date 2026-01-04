@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/models/journal_model.dart';
 import 'package:uas_project/screens/journal/card_journal.dart';
+import 'package:uas_project/screens/journal/create_journal.dart';
 import 'package:uas_project/screens/journal/journal_screen.dart';
 import 'package:uas_project/services/journal_service.dart';
 import 'package:uas_project/widgets/search_field.dart';
@@ -45,7 +46,7 @@ class _ListJournalScreenState extends State<ListJournalScreen> {
         journalData = _journalService.searchJournal(
           isPublic: isPublic,
           query: _searchQuery,
-          idUser: auth.userData!.docId
+          idUser: auth.userData!.docId,
         );
       }
     });
@@ -134,7 +135,7 @@ class _ListJournalScreenState extends State<ListJournalScreen> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.reply, color: Color(0xFF73a664)),
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pushNamed(context, "/homeScreen"),
                   tooltip: "Back",
                 ),
 
@@ -306,7 +307,10 @@ class _ListJournalScreenState extends State<ListJournalScreen> {
                         ),
                       );
                     } else if (snapshot.hasError) {
-                      return Center(child: Text("Error: ${snapshot.error}"));
+                      print(snapshot.error);
+                      return Center(
+                        child: Text("Error fetch journal: ${snapshot.error}"),
+                      );
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(
                         child: Text(
@@ -329,7 +333,35 @@ class _ListJournalScreenState extends State<ListJournalScreen> {
                                     JournalScreen(journal: journal),
                               ),
                             ),
-                            child: CardJournal(journal: journal),
+                            child: CardJournal(
+                              journal: journal,
+                              onEdit: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CreateJournal(journal: journal),
+                                  ),
+                                );
+                              },
+                              isPublic: isPublic,
+                              onDelete: () async {
+                                try {
+                                  Navigator.pop(context);
+                                  await _journalService.deleteJournal(
+                                    idJournal: journal.docId!,
+                                  );
+                                  _reloadData();
+                                } catch (e) {
+                                  if (!mounted) return;
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text("Failed deleteing journal"),
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                           );
                         },
                       );

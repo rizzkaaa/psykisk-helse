@@ -1,9 +1,11 @@
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/post_model.dart';
 import 'package:uas_project/models/users_model.dart';
 import 'package:uas_project/screens/community/comment_screen.dart';
+import 'package:uas_project/screens/profile_screen/profile_screen.dart';
 import 'package:uas_project/services/community_service.dart';
 import 'package:uas_project/widgets/unstyle_button.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +48,7 @@ class _CardPostState extends State<CardPost> {
       userLevel = level;
     });
 
-     if (uid != null) {
+    if (uid != null) {
       _checkIsLiked();
     }
   }
@@ -58,10 +60,7 @@ class _CardPostState extends State<CardPost> {
   }
 
   Future<void> _checkIsLiked() async {
-    final liked = await _communityService.isPostLiked(
-      userID!,
-      widget.post.id,
-    );
+    final liked = await _communityService.isPostLiked(userID!, widget.post.id);
 
     if (mounted) {
       setState(() {
@@ -86,6 +85,7 @@ class _CardPostState extends State<CardPost> {
 
   @override
   Widget build(BuildContext context) {
+    final auth = context.watch<AuthController>();
     return FutureBuilder(
       future: userData,
       builder: (context, snapshot) {
@@ -101,7 +101,7 @@ class _CardPostState extends State<CardPost> {
           user = snapshot.data!;
 
           return Padding(
-            padding: const EdgeInsets.only(top: 20, left: 30, right: 30),
+            padding: const EdgeInsets.only(bottom: 20, left: 30, right: 30),
             child: Column(
               children: [
                 Container(
@@ -133,67 +133,87 @@ class _CardPostState extends State<CardPost> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 3),
-                            ),
-                            child: CircleAvatar(
-                              backgroundImage: (user.photo.isNotEmpty)
-                                  ? user.photo.toImageProvider()
-                                  : AssetImage(
-                                          'assets/images/default-ava.png',
-                                        )
-                                        as ImageProvider,
-                            ),
-                          ),
+                      GestureDetector(
+                        onTap: () {
+                          if (auth.userData == null) return;
 
-                          const SizedBox(width: 10),
-                          Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "@${user.username} ${widget.post.displayRole}",
-                                style: GoogleFonts.roboto(
+                          if (auth.userData!.docId! == widget.post.idUser) {
+                            Navigator.pushNamed(context, "/profileScreen");
+                          } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ProfileScreen(selectUser: user),
+                              ),
+                            );
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                  width: 3,
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Text(
-                                    widget.post.timestamp.timeAgo,
-                                    style: GoogleFonts.bricolageGrotesque(
-                                      color: Colors.white70,
-                                      fontSize: 10,
-                                    ),
+                              child: CircleAvatar(
+                                backgroundImage: (user.photo.isNotEmpty)
+                                    ? user.photo.toImageProvider()
+                                    : AssetImage(
+                                            'assets/images/default-ava.png',
+                                          )
+                                          as ImageProvider,
+                              ),
+                            ),
+
+                            const SizedBox(width: 10),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "@${user.username} ${widget.post.displayRole}",
+                                  style: GoogleFonts.roboto(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  const SizedBox(width: 10),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: Text(
-                                      widget.post.tag,
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      widget.post.timestamp.timeAgo,
                                       style: GoogleFonts.bricolageGrotesque(
-                                        color: Color(0xFF4ece5d),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
+                                        color: Colors.white70,
+                                        fontSize: 10,
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
+                                    const SizedBox(width: 10),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: Text(
+                                        widget.post.tag,
+                                        style: GoogleFonts.bricolageGrotesque(
+                                          color: Color(0xFF4ece5d),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Divider(

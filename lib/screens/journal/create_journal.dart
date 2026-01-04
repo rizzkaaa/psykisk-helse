@@ -3,12 +3,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
 import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
+import 'package:uas_project/models/journal_model.dart';
 import 'package:uas_project/screens/journal/journal_screen.dart';
 import 'package:uas_project/services/journal_service.dart';
 import 'package:uas_project/widgets/unstyle_button.dart';
 
 class CreateJournal extends StatefulWidget {
-  const CreateJournal({super.key});
+  final JournalModel? journal;
+  const CreateJournal({super.key, this.journal});
 
   @override
   State<CreateJournal> createState() => _CreateJournalState();
@@ -16,31 +18,67 @@ class CreateJournal extends StatefulWidget {
 
 class _CreateJournalState extends State<CreateJournal> {
   final JournalService _journalService = JournalService();
-  final TextEditingController _titleController = TextEditingController(
-    text: "My Journal",
-  );
+
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
   bool isPublic = false;
   final UndoHistoryController _undoController = UndoHistoryController();
 
-  void _saveJournal(String idUser) async {
-    try {
-      final journal = await _journalService.addJournal(
-        idUser: idUser,
-        title: _titleController.text,
-        content: _contentController.text,
-        isPublic: isPublic,
-      );
-      if (!mounted) return;
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text("Upload success")));
+  @override
+  void initState() {
+    super.initState();
+    _titleController.text = widget.journal == null
+        ? "My Journal"
+        : widget.journal!.title;
+    _contentController.text = widget.journal == null
+        ? ""
+        : widget.journal!.content;
+    isPublic = widget.journal == null ? false : widget.journal!.isPublic;
+  }
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => JournalScreen(journal: journal),
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _contentController.dispose();
+    _undoController.dispose();
+    super.dispose();
+  }
+
+  void _saveJournal(String idUser) async {
+    if (_contentController.text.isEmpty) return;
+
+    try {
+      late JournalModel journal;
+
+      if (widget.journal == null) {
+        journal = await _journalService.addJournal(
+          idUser: idUser,
+          title: _titleController.text,
+          content: _contentController.text,
+          isPublic: isPublic,
+        );
+      } else {
+        journal = await _journalService.editJournal(
+          idJournal: widget.journal!.docId!,
+          title: _titleController.text,
+          content: _contentController.text,
+          isPublic: isPublic,
+        );
+      }
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            widget.journal == null ? "Journal created" : "Journal updated",
+          ),
         ),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => JournalScreen(journal: journal)),
       );
     } catch (e) {
       if (!mounted) return;
