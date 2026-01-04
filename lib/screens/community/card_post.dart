@@ -5,7 +5,7 @@ import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/post_model.dart';
 import 'package:uas_project/models/users_model.dart';
 import 'package:uas_project/screens/community/comment_screen.dart';
-import 'package:uas_project/screens/profile_screen/profile_screen.dart';
+import 'package:uas_project/screens/profile/profile_screen.dart';
 import 'package:uas_project/services/community_service.dart';
 import 'package:uas_project/widgets/unstyle_button.dart';
 import 'package:flutter/material.dart';

@@ -19,7 +19,7 @@ import 'package:uas_project/screens/journal/list_journal_screen.dart';
 import 'package:uas_project/screens/mood_tracker/ask_mood.dart';
 import 'package:uas_project/screens/mood_tracker/mood_tracker_screen.dart';
 import 'package:uas_project/screens/notification_screen.dart';
-import 'package:uas_project/screens/profile_screen/profile_screen.dart';
+import 'package:uas_project/screens/profile/profile_screen.dart';
 import 'package:uas_project/screens/psychology_test/psychology_test_list.dart';
 import 'package:uas_project/screens/users/user_list.dart';
 import 'package:uas_project/screens/welcome_screen.dart';
@@ -71,8 +71,7 @@ class MyApp extends StatelessWidget {
         '/community': (context) => CommunityScreen(),
         '/createCommunity': (context) => CreatePostScreen(),
         '/audioRelaxation': (context) => AudioPlaylistScreen(),
-        '/listJournal': (context) => ListJournalScreen(),
-        '/createJournal': (context) => CreateJournal(),
+        '/listJournal': (context) => ListJournalScreen(),        '/createJournal': (context) => CreateJournal(),
       },
     );
   }

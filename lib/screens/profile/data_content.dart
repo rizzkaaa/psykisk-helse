@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:uas_project/models/users_model.dart';
-import 'package:uas_project/screens/profile_screen/profile_info_card.dart';
+import 'package:uas_project/screens/profile/profile_info_card.dart';
 
 class DataContent extends StatelessWidget {
   final UserModel user;

@@ -4,12 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:uas_project/controllers/auth_controller.dart';
 import 'package:uas_project/extensions/firestore_extension.dart';
 import 'package:uas_project/models/users_model.dart';
-import 'package:uas_project/screens/profile_screen/bookmark_journal_content.dart';
-import 'package:uas_project/screens/profile_screen/data_content.dart';
-import 'package:uas_project/screens/profile_screen/edit_password.dart';
-import 'package:uas_project/screens/profile_screen/edit_profile.dart';
+import 'package:uas_project/screens/profile/bookmark_journal_content.dart';
+import 'package:uas_project/screens/profile/data_content.dart';
+import 'package:uas_project/screens/profile/edit_password.dart';
+import 'package:uas_project/screens/profile/edit_profile.dart';
 import 'package:flutter_inset_shadow/flutter_inset_shadow.dart' as inset;
-import 'package:uas_project/screens/profile_screen/favorite_post_content.dart';
+import 'package:uas_project/screens/profile/favorite_post_content.dart';
 import 'package:uas_project/widgets/confirm_dialog.dart';
 import 'package:uas_project/widgets/tab_menu_profile.dart';
 
