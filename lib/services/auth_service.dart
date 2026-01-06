@@ -147,7 +147,6 @@ class AuthService {
 
       await _userRef.doc(idUser).update({'role': add ? 'admin' : 'user'});
 
-      // notifService.createPersonalNotif(idUser, add ? 'addAdmin' : 'unAdmin');
 
       return add
           ? "Pengguna telah menjadi admin"
@@ -252,7 +251,6 @@ class AuthService {
   Future<void> deleteAccount(String idUser) async {
     try {
       await _userRef.doc(idUser).update({'isActive': false});
-      // notifService.createPersonalNotif(idUser, 'deleteAcc');
     } catch (e) {
       print(e);
     }

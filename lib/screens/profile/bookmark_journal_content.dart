@@ -31,9 +31,7 @@ class _BookmarkJournalContentState extends State<BookmarkJournalContent> {
     if (widget.isBookmarked) {
       journalData = _journalService.getBookmarkedJournal(widget.idUser);
     } else {
-      journalData = _journalService.getAllJournalByUser(
-        idUser: widget.idUser,
-      );
+      journalData = _journalService.getAllJournalByUser(idUser: widget.idUser);
     }
   }
 
@@ -41,33 +39,34 @@ class _BookmarkJournalContentState extends State<BookmarkJournalContent> {
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: FutureBuilder(
-            future: journalData,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(color: Color(0xFF73a664)),
-                );
-              } else if (snapshot.hasError) {
-                print(snapshot.error);
-                return Center(
-                  child: Text("Error fetch journal: ${snapshot.error}"),
-                );
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text(
-                    "There's no journal",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
-              } else {
-                final journals = snapshot.data!;
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: FutureBuilder(
+          future: journalData,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(color: Color(0xFF73a664)),
+              );
+            } else if (snapshot.hasError) {
+              print(snapshot.error);
+              return Center(
+                child: Text("Error fetch journal: ${snapshot.error}"),
+              );
+            } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              return const Center(
+                child: Text(
+                  "There's no journal",
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            } else {
+              final journals = snapshot.data!;
 
-                return ListView.builder(
-                  itemCount: journals.length,
-                  itemBuilder: (context, index) {
-                    final journal = journals[index];
+              return ListView.builder(
+                itemCount: journals.length,
+                itemBuilder: (context, index) {
+                  final journal = journals[index];
+                  if (journal.isPublic) {
                     return GestureDetector(
                       onTap: () => Navigator.push(
                         context,
@@ -82,11 +81,14 @@ class _BookmarkJournalContentState extends State<BookmarkJournalContent> {
                         onDelete: () {},
                       ),
                     );
-                  },
-                );
-              }
-            },
-          ),
+                  }else {
+                    return SizedBox();
+                  }
+                },
+              );
+            }
+          },
+        ),
       ),
     );
   }

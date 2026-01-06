@@ -17,3 +17,4 @@ abstract class BasePost {
 
   String get displayRole;
 }
+

@@ -19,7 +19,7 @@ class ReplyPost extends BasePost {
 
   @override
   String get displayRole {
-    return role == 'Counsultant' ? "(Counsultant)" : "";
+    return role == 'counsultant' ? "(Counsultant)" : "";
   }
 
   factory ReplyPost.fromFirestore(DocumentSnapshot doc) {

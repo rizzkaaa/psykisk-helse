@@ -112,13 +112,11 @@ class AuthController extends ChangeNotifier {
     notifyListeners();
 
     try {
-      print(idUser);
       final user = await _authService.getUserByID(idUser);
       isLoading = false;
       notifyListeners();
       return user;
     } catch (e) {
-      print(e);
       return null;
     } finally {
       isLoading = false;

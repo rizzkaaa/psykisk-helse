@@ -41,7 +41,6 @@ class _ListJournalScreenState extends State<ListJournalScreen> {
                 idUser: auth.userData!.docId!,
               );
       } else {
-        print(_searchQuery);
         journalData = _journalService.searchJournal(
           isPublic: isPublic,
           query: _searchQuery,
@@ -56,7 +55,6 @@ class _ListJournalScreenState extends State<ListJournalScreen> {
     setState(() {
       _searchQuery = query;
     });
-    print(_searchQuery);
     _loadJournal();
   }
 

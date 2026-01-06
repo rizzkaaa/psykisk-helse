@@ -150,7 +150,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: registerController.isLoading
                       ? CircularProgressIndicator(color: Colors.white)
                       : Text(
-                          "Sign In",
+                          "Sign Up",
                           style: GoogleFonts.bricolageGrotesque(
                             color: Colors.white,
                             fontSize: 18,

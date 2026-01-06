@@ -10,8 +10,8 @@ class ReplyScreen extends StatefulWidget {
   final ReplyPost reply;
   final VoidCallback onPressed;
   final bool isReplyFieldOpen;
-  final bool isComment; // true = level 1 (comment), false = level 2 (reply)
-  final String? parentUserName; // Username yang direply
+  final bool isComment;
+  final String? parentUserName;
 
   const ReplyScreen({
     super.key,
@@ -36,15 +36,6 @@ class _ReplyScreenState extends State<ReplyScreen> {
   void initState() {
     super.initState();
     userData = _authController.fetchUserByID(widget.reply.idUser);
-
-    print("=== DEBUG REPLY ===");
-    print("Reply ID: ${widget.reply.id}");
-    print("isComment: ${widget.isComment}");
-    print("parentUserName: ${widget.parentUserName}");
-    print("reply.idReply: ${widget.reply.idReply}");
-    print("==================");
-
-    // Fetch parent user data jika ini adalah reply (level 2)
     if (!widget.isComment &&
         widget.parentUserName != null &&
         widget.parentUserName!.isNotEmpty) {
@@ -78,7 +69,6 @@ class _ReplyScreenState extends State<ReplyScreen> {
             padding: const EdgeInsets.only(bottom: 20),
             child: Row(
               children: [
-                // Icon panah untuk level 2 (reply)
                 if (!widget.isComment)
                   Column(
                     children: [
@@ -95,7 +85,6 @@ class _ReplyScreenState extends State<ReplyScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Avatar
                       Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
@@ -124,7 +113,6 @@ class _ReplyScreenState extends State<ReplyScreen> {
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    // Tampilkan "Reply @username" untuk level 2
                                     if (!widget.isComment &&
                                         parentUserData != null)
                                       FutureBuilder<UserModel?>(
@@ -146,7 +134,6 @@ class _ReplyScreenState extends State<ReplyScreen> {
                                         },
                                       ),
 
-                                    // Username dan role
                                     Text(
                                       "@${user.username} ${widget.reply.displayRole}",
                                       style: GoogleFonts.roboto(

@@ -94,6 +94,7 @@ class MoodTrackerService extends ChangeNotifier {
     final snapshot = await _firestore
         .collection("mood_logs")
         .where("idUser", isEqualTo: idUser)
+        .orderBy('created_at', descending: true)
         .get();
 
     return snapshot.docs.map((doc) => MoodModel.fromFirestore(doc)).toList();

@@ -29,7 +29,6 @@ class _UserListState extends State<UserList> {
   void _loadUser() {
     setState(() {
       if (_searchQuery.isEmpty) {
-        print(_searchQuery);
         _usersData = _userController.fetchAllUser();
       } else {
         _usersData = _userController.searchUser(_searchQuery);
@@ -235,7 +234,6 @@ class _UserListState extends State<UserList> {
                                   Navigator.pop(context);
                                   await _userController.deleteAcc(user.docId!);
                                   _loadUser();
-                                  // await pengajuanService.deletePengajuan(user.docId!);
                                 },
                               );
                             },
